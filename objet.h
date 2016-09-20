@@ -30,10 +30,11 @@ Object * get_object(int posx, int posy);
 int isObject(int posx, int posy);
 void rm_object(int posx, int posy); /* Remove the object at posx, posy */
 void free_objects(); /* free() all the list */
+int drop_object(int i);
 int find_near_free_tile(int * posx, int * posy);
 /* Trouve la case libre la plus proche de *posx, *posy (celle-ci comprise)
  *  et met ses coordonneees dans *posx, *posy */
-/* @return 1 si objet droppe, 0 sinon*/
+/* @return 0 si objet droppe, 1 sinon*/
 
 
 #endif

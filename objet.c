@@ -8,6 +8,7 @@
  */
 
 #include "opmorl.h"
+#define K 800000000
 
 
 /* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
@@ -24,10 +25,10 @@ Object o_default[17] = {
 	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
 	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
 	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
-	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0},
-	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,       0, K, 0},
-	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,       0, K, 0},
-	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,       0, K, 0}}; /* DONE \o/ */
+	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0}, /* Arrows increment from 25 the "arrows" variable from Rodney.*/
+	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,      0, K,  0},
+	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,      0, K,  0},
+	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,      0, K,  0}}; /* DONE \o/ */
 
 /*** VERY IMPORTANT NOTE : FUNCTION NAMES CHANGED TO USE
  *** THE SAME SPEC AS IN MONSTER.C. PLEASE CHECK OUT OBJET.H
@@ -71,14 +72,22 @@ int find_near_free_tile(int * posx, int * posy) {
 	int i, j;
 	int curx = rodney.posx;
 	int cury = rodney.posy;
-	if(!isObject(rodney.posx, rodney.posy)) {
-
+	if (!isObject(curx, cury)) { // cury and not curry
+		posx = &curx;
+		posy = &cury;
 	}
-	for (i = curx-1; i < curx+2; i++)
-		for (j = cury-1; j < cury+2; j++)
-			if (isObject(i, j) || lvl_map[i][j] == T_WALL || lvl_map[i][j] == T_NONE)
-				return 0;
-	return 1;
+	else {
+		for (i = -1; i < curx+2; i++) {
+			for (j = -1; j < cury+2; j++) {
+				if (!isObject(i, j) && lvl_map[i][j] != T_WALL && lvl_map[i][j] != T_NONE) {
+					posx = &i;
+					posy = &j;
+					return 0;
+				}
+			}
+		}
+	}
+	return 1; // This should be reached when dropping fails, which means the player is surrounded by objects
 }
 /* This function is not KNOWN to work, but where could bugs hide in 5 lines of code ? */
 
@@ -102,8 +111,46 @@ void free_objects(Object * obj)
 	obj = NULL;
 }
 
-Object * get_object(int posx, int posy)
-{
+/* This function is to be called with an existing object at index i */
+int drop_object(int i) {
+	int j;
+	if (i < 10) { /* means the object is in the inventory */
+		if (!find_near_free_tile(&inventory[i].posx, &inventory[i].posy)) {
+			for (j = i+1; j < 10; j++)
+				inventory[j-1] = inventory[j]; //this should _not_ segfault
+			inventory[9]; // This should be putted to 0 but I dunno how, as for down.
+			return 0; // dropping succeeded
+		}
+		return 1; // FAIL
+	}
+	else { /* the object is either the equipped weapon, armor or shield */
+		if (i == WEAPON_SLOT) {
+			if (!find_near_free_tile(&weapon.posx, &weapon.posy)) {
+				weapon;
+				return 0;
+			}
+			return 1; // FAIL
+		}
+		if (i == ARMOR_SLOT) {
+			if (!find_near_free_tile(&armor.posx, &armor.posy)) {
+				armor;
+				return 0;
+			}
+			return 1; // FAIL
+		}
+		if (i == SHIELD_SLOT) {
+			if (!find_near_free_tile(&shield.posx, &shield.posy)) {
+				shield;
+				return 0;
+			}
+			return 1; // FAIL
+		}
+	}
+	return 1;
+}
+		
+
+Object *get_object(int posx, int posy) {
 	Object * current = o_list;
 	
 	while(current != NULL) {

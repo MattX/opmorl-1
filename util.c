@@ -9,7 +9,7 @@
 
 int min(int a, int b)
 {
-	return a<b ? a:b;
+	return a<b ? a:b; ///OMG TERNARY COMMENT
 }
 
 int max(int a, int b)
@@ -19,5 +19,5 @@ int max(int a, int b)
 
 int rnd_max(int a, int b)
 {
-	return rand()%(b-a) + a;
+	return rand()%(b-a) + a; //yeah, better
 }
