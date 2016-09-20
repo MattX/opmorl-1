@@ -34,8 +34,6 @@ int rnd_max(int a, int b)
 	return rand()%(b-a+1) + a; /* yeah, better */
 }
 
-
-//NOW WTF IS THIS ?
 char choice(char c, char d, char * msg) {
 	char e = '\0';
 	while (e != c && e != d) {

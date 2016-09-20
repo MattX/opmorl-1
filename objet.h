@@ -34,7 +34,5 @@ void drink();
 void wish();
 void make_objects();
 
-Object * amgo(int index);
-void just_dropped(int index);
 
 #endif

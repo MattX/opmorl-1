@@ -106,6 +106,8 @@ void move_letter(char c)
 {
 	int ret, mon; //Whether the monster's dead
 
+	
+	//TODO: Switch rooms when Rodney opens a door in a town.
 	switch(c) {
 	case 'h': // move <-
 		ret = val_pos(rodney.posx, rodney.posy-1);

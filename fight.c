@@ -1,6 +1,6 @@
 /*
  *  fight.c
- *  OPMORL0
+ *  OPMORL
  *
  *  Created by Théotime Grohens on 13/01/10.
  *  Copyright 2010 Opmorl, inc. All rights reserved.

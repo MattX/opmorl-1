@@ -151,7 +151,7 @@ void make_monsters()
 {
 	int nb_gen = rnd_max(2, 10);
 	int posx, posy;
-	int ri;
+	int ri; //HERE ANOTHER BULLSHIT
 
 
 	while(nb_gen--) {
