@@ -93,7 +93,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx, rodney.posy-1);
+			fight(rodney.posx, rodney.posy-1);
 			return;
 		}
 		rodney.posy--;
@@ -103,7 +103,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx+1, rodney.posy);
+			fight(rodney.posx+1, rodney.posy);
 			return;
 		}
 		rodney.posx++;
@@ -113,7 +113,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx-1, rodney.posy);
+			fight(rodney.posx-1, rodney.posy);
 			return;
 		}
 		rodney.posx--;
@@ -123,12 +123,11 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-		//	fight(rodney.posx, rodney.posy+1);
+			fight(rodney.posx, rodney.posy+1);
 			return;
 		}
 		rodney.posy++;
 		break;
-
 	}
 	check_visit();
 }

@@ -8,7 +8,6 @@
  */
 
 #include "opmorl.h"
-#define K 800000000
 
 
 /* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
@@ -25,10 +24,10 @@ Object o_default[17] = {
 	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
 	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
 	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
-	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0}, /* Arrows increment from 25 the "arrows" variable from Rodney.*/
-	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,      0, K,  0},
-	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,      0, K,  0},
-	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,      0, K,  0}}; /* DONE \o/ */
+	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0},
+	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,       0, K, 0},
+	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,       0, K, 0},
+	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,       0, K, 0}}; /* DONE \o/ */
 
 /*** VERY IMPORTANT NOTE : FUNCTION NAMES CHANGED TO USE
  *** THE SAME SPEC AS IN MONSTER.C. PLEASE CHECK OUT OBJET.H
@@ -101,14 +100,6 @@ void free_objects(Object * obj)
 	free(obj);
 
 	obj = NULL;
-}
-
-/* This function is to be called with an existing object at index i */
-void drop_object(int i) {
-	rodney.inventary[i-1]->next = rodney.inventary[i]->next;
-	free(rodney.inventary[i]);
-	rodney.inventary[i] = NULL;
-	
 }
 
 Object * get_object(int posx, int posy)
