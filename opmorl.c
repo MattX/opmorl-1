@@ -37,6 +37,10 @@ void loop()
 		case '>':
 			new_level();
 			break;
+		case 'L':
+			show_monsters();
+			printf("HP = %d\n", rodney.hp);
+			break;
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin

@@ -54,8 +54,8 @@ void show_monsters()
 {
 	Monster * current = m_list;
 	while(current != NULL) {
-		printf("Monster at %d,%d : %s with %d life\n", current->posx,
-				current->posy, current->name, current->hp);
+		printf("Monster at %d,%d : %s with %d life, awake = %d\n", current->posx,
+				current->posy, current->name, current->hp, current->awake);
 		current = current->next;
 	}
 }
@@ -92,8 +92,8 @@ void rm_monster(int posx, int posy)
 	if(current == NULL) return;
 
 	if(current->posx == posx && current->posy == posy) {
-		free(current);
 		m_list = current->next;
+		free(current);
 	}
 	while(current->next != NULL) {
 		if(current->next->posx == posx && current->next->posy == posy) {
@@ -117,10 +117,73 @@ void free_monsters(Monster * mon)
 	mon = NULL;
 }
 
-void fight(Monster * mon)
+void m_fight()
 {
-	mon->hp -= 5;
+	for(i = rodney.posx-1; i < rodney.posx+2; i++)
+		for(j = rodney.posy-1; j < rodney.posy+2; j++)
+			if(get_monster(i, j) != NULL) {
+				rodney.hp -= get_monster(i,j)->attack;
+			}
+}
+
+void p_fight(int x, int y)
+{
+	Monster * mon = get_monster(x, y);
+	int i, j;
+
+	if(mon == NULL) return;
+	mon->hp -= 4;
 	mon->awake = 1; /* Wake up monster */
+	if(mon->hp <= 0)
+		rm_monster(x, y);
+}
+
+void m_valid(int x, int y)
+{
+	if(rodney.posx != x && rodney.posy != y && get_monster(x, y) == NULL &&
+			lvl_map[x][y] == T_FLOOR || lvl_map[x][y] == T_STAIRS || lvl_map[x][y] == T_CORRIDOR)
+		return 1;
+	return 0;
+}
+
+void move_monsters()
+{
+	Monster * current = m_list;
+	int d_dirx, d_diry;
+
+	while(current != NULL) {
+		if(current->awake = 0) {
+			current = current->next;
+			continue;
+		}
+		/* Slightly complex code here. We want to move towards the
+		 * player in the direction that needs it the most.
+		 */
+		/* Please note that this code fails a whole lot : consider this case
+		 *   ########
+		 *   #...M..#
+		 *   #.######
+		 *    =====
+		 *   #####.##
+		 *   #...@..#
+		 *   ########
+		 * the monster M would try to move down unsucessfully.
+		 */
+		d_dirx = rodney.posx - current->posx;
+		d_diry = rodney.posy - current->posy;
+		/*                Means : check the correct cell for validity. The tern-exp is used to check the right cell.
+		 *                                      vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv */
+		if(abs(d_dirx) > abs(d_diry) && m_valid(current->dirx+(d_dirx<0?-1:1), current->diry)) {
+			if(d_dirx < 0)
+				current->dirx--;
+			else
+				current->dirx++;
+		} else if(m_valid(current->dirx, current->diry+(d_diry<0?-1:1))) {
+			if(d_diry < 0) current->diry--;
+			else current->diry++;
+		}
+		// else do not move.
+	}
 }
 
 /** DIRTY CODE */

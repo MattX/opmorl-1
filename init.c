@@ -20,6 +20,7 @@ void first_init()
 	rodney.posy = 1;
 	rodney.sword_b = 0;
 	rodney.bow_b = 0;
+	rodney.hp = 10;
 
 	m_list = NULL;
 

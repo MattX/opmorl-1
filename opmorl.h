@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define FINAL_LVL 25
 #define DEBUG 1
@@ -86,24 +87,7 @@ typedef struct obj_type {
 /* ALSO NOTE : STOP WITH CRAPPY VAULES, SHIT ! Unused values must be set to 0,
  * not K, -K or any random number. Please correct this. */
 
-/* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
-Object o_default[17] = {
-	{C_WAND,    "Wand of Death",       -1, -1,  0, -80000, 0, 1,  0}, /* The Wand of Death doesn't freeze, but instakills, no arrows, one shot only (because it'd be busay)*/
-	{C_WAND,    "Wand of Life",	       -1, -1,  0, 800000, 0, 1,  0}, /* same as the wand of death, more than one'd be busay */
-	{C_WAND,    "Wand of Freeze",      -1, -1,  0, 0,      1, 5,  0}, /* 5 shots seem good for this one*/
-	{C_WAND,    "Wand of Wounds",      -1, -1,  0, -30,    0, 10, 0}, /* nothing particular, just-a-comment*/
-	{C_POTION,  "Potion of Cure",      -1, -1,  0, 15,     0, 1,  0}, /* what a shitty name man*/
-	{C_POTION,  "Potion of Healing",   -1, -1,  0, 35,	   0, 1,  0}, /* the name was so awful that I changed it*/
-	{C_POTION,  "Potion of Poison",    -1, -1,  0, -20,    0, 1,  0}, /* This one particularly rocks */
-	{C_SWORD,   "Wooden Sword",	       -1, -1,  5, 0,	   0, K,  0}, /* Basic sword, given at the beginning of the game */
-	{C_SWORD,   "Iron Sword",	       -1, -1,  7, 0,      0, K,  0}, /* This Sword is powerfuller */
-	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
-	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
-	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
-	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0},
-	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,       0, K, 0},
-	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,       0, K, 0},
-	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,       0, K, 0}}; /* DONE \o/ */
+extern Object o_default[17];
 
 Object * o_list; 
 
@@ -114,16 +98,19 @@ void display_map();
 void display_msg();
 void first_init();
 void move_letter(char c);
-void fight(Monster * mon);
+void fight(int x, int y);
 Monster * get_monster(int posx, int posy);
 Monster * add_monster(Monster mon, int posx, int posy);
 void free_monsters(Monster * mon);
 void make_monsters();
+void free_objects(Object *);
 
 int min(int,int);
 int max(int,int);
 int rnd_max(int,int);
 
 void check_visit();
+
+#include "objet.h"
 
 #endif /* OPMORL_H_ */

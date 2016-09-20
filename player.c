@@ -8,12 +8,18 @@
 #include <stdlib.h>
 #include "opmorl.h"
 
+#define V_NO 0
+#define V_YES 1
+#define V_COMBAT 2
+
 int val_pos(int x, int y)
 {
-	if(x < 0 || x > 10 || y < 0 || y > 9 ||
+	if(x < 0 || x > 11 || y < 0 || y > 10 ||
 			lvl_map[x][y] == T_WALL || lvl_map[x][y] == T_NONE)
-		return 0;
-	return 1;
+		return V_NO;
+	if(get_monster(x, y) != NULL)
+		return V_COMBAT;
+	return V_YES;
 }
 
 /** find_walls : find edges (walls) of the room.
@@ -29,16 +35,16 @@ void find_walls(int * w_up, int * w_down, int * w_left, int * w_right)
 	int cx = rodney.posx, cy = rodney.posy;
 
 	//Find left & right walls
-	while(lvl_map[cx][--cy] != T_WALL);
+	while(val_pos(cx, --cy));
 	*w_left = cy;
-	while(lvl_map[cx][++cy] != T_WALL);
+	while(val_pos(cx, ++cy));
 	*w_right = cy;
 	cy = rodney.posy;
 
 	//Find up & down walls
-	while(lvl_map[--cx][cy] != T_WALL);
+	while(val_pos(--cx, cy));
 	*w_up = cx;
-	while(lvl_map[++cx][cy] != T_WALL);
+	while(val_pos(++cx, cy));
 	*w_down = cx;
 }
 
@@ -56,8 +62,11 @@ void check_visit()
 	//If in a corridor
 	if(lvl_map[rodney.posx][rodney.posy] == T_CORRIDOR) {
 		for(i = rodney.posx-1; i <= rodney.posx+1; i++)
-			for(j = rodney.posy-1; j <= rodney.posy+1; j++)
+			for(j = rodney.posy-1; j <= rodney.posy+1; j++) {
 				map_status[i][j] = TS_SEEN;
+				if(get_monster(i,j) != NULL)
+					get_monster(i,j)->awake=1;
+			}
 		return;
 	}
 
@@ -66,28 +75,57 @@ void check_visit()
 			lvl_map[rodney.posx][rodney.posy] == T_STAIRS) {
 		find_walls(&w_up, &w_down, &w_left, &w_right);
 		for(i = w_up; i <= w_down; i++)
-			for(j = w_left; j <= w_right; j++)
+			for(j = w_left; j <= w_right; j++) {
 				map_status[i][j] = TS_SEEN;
+				if(get_monster(i,j) != NULL)
+					get_monster(i,j)->awake=1;
+			}
 	}
 }
 
 void move_letter(char c)
 {
+	int ret;
+
 	switch(c) {
 	case 'h': // move <-
-		if(val_pos(rodney.posx, rodney.posy-1) == 0) return;
+		ret = val_pos(rodney.posx, rodney.posy-1);
+
+		if(!ret) return;
+		if(ret == V_COMBAT) {
+			fight(rodney.posx, rodney.posy-1);
+			return;
+		}
 		rodney.posy--;
 		break;
 	case 'j': // move v
-		if(val_pos(rodney.posx+1, rodney.posy) == 0) return;
+		ret = val_pos(rodney.posx+1, rodney.posy);
+
+		if(!ret) return;
+		if(ret == V_COMBAT) {
+			fight(rodney.posx+1, rodney.posy);
+			return;
+		}
 		rodney.posx++;
 		break;
 	case 'k': // move ^
-		if(val_pos(rodney.posx-1, rodney.posy) == 0) return;
+		ret = val_pos(rodney.posx-1, rodney.posy);
+
+		if(!ret) return;
+		if(ret == V_COMBAT) {
+			fight(rodney.posx-1, rodney.posy);
+			return;
+		}
 		rodney.posx--;
 		break;
 	case 'l': // move ->
-		if(val_pos(rodney.posx, rodney.posy+1) == 0) return;
+		ret = val_pos(rodney.posx, rodney.posy+1);
+
+		if(!ret) return;
+		if(ret == V_COMBAT) {
+			fight(rodney.posx, rodney.posy+1);
+			return;
+		}
 		rodney.posy++;
 		break;
 	}
