@@ -103,7 +103,7 @@ void fill_visit()
 
 void move_letter(char c)
 {
-	int ret, death = 1; //Used to check whether the monster, or Rodney, is dead and act in consequence.
+	int ret, mon; //Whether the monster's dead
 
 	
 	//TODO: Switch rooms when Rodney opens a door in a town.
@@ -112,41 +112,47 @@ void move_letter(char c)
 		ret = val_pos(rodney.posx, rodney.posy-1);
 
 		if(!ret) return;
-		if(ret == V_COMBAT)
-			death = fight(rodney.posx, rodney.posy-1);
-		if (death == 1) rodney.posy--; 
+		if(ret == V_COMBAT) {
+			mon = p_fight(rodney.posx, rodney.posy-1);
+			break; //Can't move if you fight
+		}
+		rodney.posy--; 
 		break;
 	case 'j': // move v
 		ret = val_pos(rodney.posx+1, rodney.posy);
 
 		if(!ret) return;
-		if(ret == V_COMBAT)
-			death = fight(rodney.posx+1, rodney.posy);
-		if (death == 1) rodney.posx++;
+		if(ret == V_COMBAT) {
+			mon = p_fight(rodney.posx+1, rodney.posy);
+			break;
+		}
+		rodney.posx++;
 		break;
 	case 'k': // move ^
 		ret = val_pos(rodney.posx-1, rodney.posy);
 
 		if(!ret) return;
-		if(ret == V_COMBAT)
-			death = fight(rodney.posx-1, rodney.posy);
-		if (death == 1) rodney.posx--;
+		if(ret == V_COMBAT) {
+			mon = p_fight(rodney.posx-1, rodney.posy);
+			break;
+		}
+		rodney.posx--;
 		break;
 	case 'l': // move ->
 		ret = val_pos(rodney.posx, rodney.posy+1);
 
 		if(!ret) return;
-		if(ret == V_COMBAT)
-			death = fight(rodney.posx, rodney.posy+1);
-		if (death == 1) rodney.posy++;
+		if(ret == V_COMBAT) {
+			mon = p_fight(rodney.posx, rodney.posy+1);
+			break;
+		}
+		rodney.posy++;
 		break;
 
 	}
-	if (death == 2) {
-		display_msg("You died here");
-		clean_exit(0);
-		return;
-	}
+	
+	if (mon) //This is weird, we should change p_fight.
+		display_msg("You killed the monster");
 	check_visit();
 }
 

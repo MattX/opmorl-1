@@ -47,7 +47,7 @@ void loop()
 		case 'd':
 			drop(); 
 			break;
-		case 'W':
+			case 'W':
 			wish();
 			break;
 		case ',':
@@ -72,7 +72,7 @@ void loop()
 int main(void)
 {
 	srand(time(NULL));
-
+	printf("%d", min3(3, 2, 1));
 	first_init();
 	fill_map();
 
@@ -81,6 +81,6 @@ int main(void)
 	loop();
 	
 	clean_exit(0);
-
-	return EXIT_SUCCESS;
+	 
+	return EPIC_WIN;
 }

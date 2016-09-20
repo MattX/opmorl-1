@@ -13,7 +13,8 @@
 #define K 800000000
 
 
-/* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
+/* every object is defined w/ a x and y of -1 to be off-map. *
+ * They are not to be modified, but to be copied into a custom one */
 Object o_default[17] = {
 	{C_WAND,    "Wand of Death",       -1, -1,  0, -80000, 0, 1,  0}, /* The Wand of Death doesn't freeze, but instakills, no arrows, one shot only (because it'd be busay)*/
 	{C_WAND,    "Wand of Life",	       -1, -1,  0, 800000, 0, 1,  0}, /* same as the wand of death, more than one'd be busay */
@@ -90,9 +91,7 @@ void show_objects()
 }
 #endif
 
-/* A little feature of this function (not a bug !) is that it will follow this pattern : 123 instead of : 627
-																					     456			  513
-																				    	 789			  948 */
+
 int find_near_free_tile(int * posx, int * posy) {
 	int i, j;
 	int x = rodney.posx, y = rodney.posy;
@@ -103,8 +102,9 @@ int find_near_free_tile(int * posx, int * posy) {
 	} else {
 		for (i = x-1; i < x+2; i++)
 			for (j = y-1; j < y+2; j++)
-				if (!isObject(i, j) && lvl_map[i][j] != T_WALL && lvl_map[i][j] != T_NONE
-						&& lvl_map[i][j] != T_STAIRS) { //TODO: Can we drop in stairs ?
+				if (!isObject(i, j) && lvl_map[i][j] != T_WALL 
+					&& lvl_map[i][j] != T_NONE
+					&& lvl_map[i][j] != T_STAIRS) { //TODO: Can we drop in stairs ?
 					*posx = i;
 					*posy = j;
 					return 1;
@@ -337,14 +337,15 @@ void zap_display() {
 
 void equip_display() {
 	int i, index;
-	for (i = 0; i < 10; i++)
-		if (inventory[i]->class == C_ARMOR_B ||
-			inventory[i]->class == C_ARMOR_S ||
-			inventory[i]->class == C_BOW	 ||
-			inventory[i]->class == C_SWORD)
-		printf("%d. A %s\n", i, inventory[i]->name);
+	for (i = 0; i < 10; i++) 
+		if (inventory[i])
+			if (inventory[i]->class == C_ARMOR_B ||
+				inventory[i]->class == C_ARMOR_S ||
+				inventory[i]->class == C_BOW	 ||
+				inventory[i]->class == C_SWORD)
+				printf("%d. A %s\n", i, inventory[i]->name);
 	scanf("%d", &index);
-	equip(index);
+	equip(index); //Seems not functional.
 }
 
 void drink() {

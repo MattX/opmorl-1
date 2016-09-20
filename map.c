@@ -63,7 +63,7 @@ void fill_map()
 
 /* This code is trivial, no comment. */ /*Then why a comment 1 line after ? LOL */
 /* NOTE : Here we do _not_ reset Rodney's position. It's not
- * a bug, it's a feature.
+ * a bug, it's a feature. And I don't see how it could be any kinda bug.
  */
 void big_gen()
 {
@@ -81,7 +81,7 @@ void big_gen()
 }
 
 
-/* Totally new function here.
+/* Totally new function here. (added sunday jan. 10th : Well, new...)
  *
  * We want : a corridor stretching to the two edges of the screen
  * at line 5, one or two rooms on the upper side and two or three
@@ -107,7 +107,9 @@ void corridor_gen() {
 	
 	//Position of walls
 	if(rooms_up == 2)
-		while (rodney.posx == (u1 = rnd_max(7, 13)));		//We want to be sure Rodney won't die crushed by walls.
+		while (rodney.posx == (u1 = rnd_max(7, 13)));	//We want to be sure
+														//Rodney won't die 
+														//crushed by walls.
 	else
 		u1 = 21;
 	if(rooms_down == 2) {
@@ -122,14 +124,16 @@ void corridor_gen() {
 	// Upper or lower ?
 	pos = rnd_max(0, 1);
 	
-	//First, the ordinate, as we know 0, 4, 5, 6 and 11 are walls/corridor (doesn't depend on rooms)
+	//First, the ordinate, as we know 0, 4, 5, 6 and 11 are walls/corridor 
+	//(doesn't depend on rooms)
 	if (!pos)
 		x_stairs = rnd_max(1, 3);
 	else
 		x_stairs = rnd_max(7, 10);
-	//Then, we shall determinate the abscissa basing on the number and position of rooms.
+	//Then, we shall determinate the abscissa 
+	//basing on the number and position of rooms.
 	if (!pos) { // Up !
-		if (rooms_up == 1) //Middle !
+		if (rooms_up) //Middle !
 			y_stairs = rnd_max(1, 20);
 		else {
 				if (!rnd_max(0, 1)) //Left !
@@ -143,7 +147,7 @@ void corridor_gen() {
 		if (rooms_down == 2) {
 			if (!rnd_max(0, 1))	//Left !
 				y_stairs = rnd_max(1, d1-1);
-			else	//Right !
+			else				//Right !
 				y_stairs = rnd_max(d1+1, 20);
 		}
 		else {
@@ -172,7 +176,8 @@ void corridor_gen() {
 	//Now, draw the border walls : horizontally
 	for(i = 0; i < 22; i++) {
 		lvl_map[0][i] = lvl_map[11][i] = lvl_map[4][i] = lvl_map[6][i] = T_WALL;
-		lvl_map[5][i] = T_CORRIDOR; // Oh yes, and we build the corridor at the same time.
+		lvl_map[5][i] = T_CORRIDOR; // Oh yes, and we build the corridor 
+									//at the same time.
 	}
 	// vertically.
 	for(i = 0; i < 12; i++) {

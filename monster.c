@@ -92,7 +92,7 @@ void rm_monster(int posx, int posy)
 	if(current->posx == posx && current->posy == posy) {
 		m_list = current->next;
 		free(current);
-		return; // There was a bug here, killed by zale.
+		return; // There was a bug here, killed by zale. // What bug ?
 	}
 	else while(current->next != NULL) {
 		if(current->next->posx == posx && current->next->posy == posy) {
@@ -126,88 +126,20 @@ void m_move()
 		if(!current->awake) continue;
 		/*Here, write some code that (a) finds the shortest way to the player
 									 (b) returns the first step of this path. */
+			//#define Dijkstra(x) ((x)*(x)*(x)+1)
+		
 		current = current->next;
 	}
 }
 
-/* ABSOLUTELY TO BE CALLED WHEN A MONSTER MOVES ONTO RODNEY'S POSITION,				*
- *THEREFORE TO BE CALLED FROM M_MOVE() & FIGHT() WHICH IS CALLED BY MOVE_LETTER()	*/
-int m_fight()
-{
-	Monster * mon;
-	char val;
 
-	if((mon = get_monster(rodney.posx, rodney.posy)) != NULL) {
-		rodney.hp -= mon->attack;
-		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
-	}
-	if (rodney.hp < 1) {
-		if(DEBUG) {
-			printf("Die(y/n) ? ");
-			getchar();
-			val = getchar();
-			if(tolower(val) == 'n') {
-				rodney.hp = 10;
-				return 0;
-			}
-		}
-		return 1;
-	}
-	return 0;
-}
-
-int p_fight(int x, int y)
-{
-	Monster * mon = get_monster(x, y);
-
-	if(mon == NULL) return 2;
-	printf("Weapon.class = %d\n", weapon->class); fflush(stdout);
-	if (weapon->class == C_SWORD) {
-		mon->hp -= weapon->attack + rodney.sword_b/50 + rodney.exp_lvl / 3 + 1; //OMG, you need a bonus of 50 for 1 extra damage
-		rodney.sword_b++;
-	}
-	else if (weapon->class == C_BOW) {
-		if(rodney.arrows == 0)
-			printf("You have no arrows left.\n");
-		else {
-			mon->hp -= weapon->attack + rodney.bow_b/50 + rodney.exp_lvl / 3 + 1;
-			rodney.bow_b++;
-			rodney.arrows--;
-		}
-	}
-	else /* Means there is no equipped weapon */
-		mon->hp -= rodney.exp_lvl / 3 + 1;
-	mon->awake = 1; /* Wake up monster */
-	if(mon->hp <= 0) {
-		rm_monster(x, y);
-		return 1;
-	}
-	if((rodney.bow_b + rodney.sword_b) % rodney.exp_lvl*rodney.exp_lvl+10) //UGLY. It makes u level up at each kill.
-		printf("You have ascended to level %d\n", rodney.exp_lvl++);
-	return 0;
-}
-
-int fight(int x, int y) {
-	if (rnd_max(0, 1)) {	// Monster attacks first, lol ! Fail !
-		if (m_fight())		// Monster killed you ! You die !
-			return 2;
-		if (p_fight(rodney.posx, rodney.posy))		// You killed this bitch ! Well done !
-			return 1;
-	}
-	else {
-		if (p_fight(rodney.posx, rodney.posy))
-			return 1;
-		if (m_fight())
-			return 2;
-	}
-
-	return 0;
-}
 
 int m_valid(int x, int y)
 {
 	if(rodney.posx != x && rodney.posy != y && get_monster(x, y) == NULL &&
-			(lvl_map[x][y] == T_FLOOR || lvl_map[x][y] == T_STAIRS || lvl_map[x][y] == T_CORRIDOR))
+			(lvl_map[x][y] == T_FLOOR  ||
+			 lvl_map[x][y] == T_STAIRS ||
+			 lvl_map[x][y] == T_CORRIDOR))
 		return 1;
 	return 0;
 }
@@ -231,7 +163,8 @@ void make_monsters()
 			posx = rnd_max(0, 10);
 			posy = rnd_max(0, 21);
 		} while(get_monster(posx, posy) != NULL ||
-				lvl_map[posx][posy] == T_WALL || lvl_map[posx][posy] == T_NONE ||
+				lvl_map[posx][posy] == T_WALL ||
+				lvl_map[posx][posy] == T_NONE ||
 				(rodney.posx == posx && rodney.posy == posy));
 		add_monster(m_default[ri], posx, posy);
 	}

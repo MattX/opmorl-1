@@ -96,12 +96,13 @@ void fill_map();
 void display_map();
 void display_msg();
 void first_init();
-void move_letter(char c);
-int  fight(int x, int y); //Returns result of the fight. 0 : nothing, 1 : monster dies, 2 : Rodney dies.
-Monster * get_monster(int posx, int posy);
-Monster * add_monster(Monster mon, int posx, int posy);
-void free_monsters(Monster * mon);
+void move_letter(char);
+int  fight(int, int); //Returns result of the fight. 0 : nothing, 1 : monster dies, 2 : Rodney dies.
+Monster * get_monster(int, int);
+Monster * add_monster(Monster, int, int);
+void free_monsters(Monster *);
 void make_monsters();
+void rm_monsters(int, int);
 void free_objects(Object *);
 void new_level();
 void clear_status();
@@ -110,14 +111,16 @@ void show_monsters();
 void show_objects();
 #endif
 int  m_fight(); //Both fights return 1 if target killed.
-int  p_fight(int x, int y); //Value return of 2 means there wasn't a monster. It should however never happen.
+int  p_fight(int, int); //Value return of 2 means there wasn't a monster. It should however never happen.
 void make_town();
 void man();
 
-int clean_exit(int dummy);
+int clean_exit(int);
 
 int min(int,int);
 int max(int,int);
+int min3(int, int, int);
+int max3(int, int, int);
 int rnd_max(int,int);
 void check_visit();
 

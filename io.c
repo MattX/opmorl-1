@@ -27,35 +27,37 @@ void display_map()
 				putchar(' ');
 				continue;
 			}
+			
+			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
+				putchar(get_monster(i, j)->name[0]);
+				continue;
+			}
 
-			if(get_object(i, j) != NULL && map_status[i][j] == TS_SEEN) { //We print objects before, so that if there is both a monster & an object the monster is displayed.
+			if(get_object(i, j) != NULL && map_status[i][j] == TS_SEEN) { 
+					//We print objects before, so that if there is both
+					//a monster & an object the monster is displayed.
+					//Edit : this fails actually, I don't wanna imagine if there are both, it should bug.
+					//Bug confirmed (and removed) : it prints the object.
 				switch (get_object(i, j)->class) {
 					case C_ARMOR_B:
 					case C_ARMOR_S:
-						putchar('A');
-						break;
 					case C_ARROW:
 						putchar('a');
 						break;
 					case C_BOW:
-						putchar('B');
+						putchar('b');
 						break;
 					case C_POTION:
-						putchar('P');
+						putchar('p');
 						break;
 					case C_SWORD:
-						putchar('S');
+						putchar('s');
 						break;
 					case C_WAND:
-						putchar('W');
+						putchar('w');
 						break;
 				}
 						 
-				continue;
-			}
-			
-			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
-				putchar(get_monster(i, j)->name[0]);
 				continue;
 			}
 
