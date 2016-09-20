@@ -156,9 +156,9 @@ int drop_object(int i) {
 				inventory[j-1] = inventory[j]; //this should _not_ segfault
 			inventory[9] = NULL;
 
-			return EPIC_WIN; // dropping succeeded
+			return 1; // dropping succeeded
 		}
-		return EPIC_FAIL; // FAIL
+		return 0; // FAIL
 	}
 
 	else { /* the object is either the equipped weapon, armor or shield */
@@ -167,7 +167,7 @@ int drop_object(int i) {
 				add_object(*weapon, -1, -1);
 				free(weapon);
 				weapon = NULL;
-				return EPIC_WIN;
+				return 1;
 			}
 		}
 
@@ -176,7 +176,7 @@ int drop_object(int i) {
 				add_object(*armor, -1, -1);
 				free(armor);
 				armor = NULL;
-				return EPIC_WIN;
+				return 1;
 			}
 		}
 
@@ -185,12 +185,12 @@ int drop_object(int i) {
 				add_object(*shield, -1, -1);
 				free(shield);
 				shield = NULL;
-				return EPIC_WIN;
+				return 1;
 			}
 		}
 	}
 
-	return EPIC_FAIL;
+	return 0;
 }
 		
 

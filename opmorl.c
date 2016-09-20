@@ -16,7 +16,7 @@ int clean_exit(int dummy) // Can I know the purpose of an argnotused when you co
 {
 	free_monsters(m_list);
 	free_objects(o_list);
-	exit(EPIC_WIN);
+	exit(1);
 }
 
 void loop()
@@ -70,10 +70,9 @@ void loop()
 		case 's':
 			display_state();
 			break;
-		/*case 'o':
-		 open_door(); //Visit things in towns.
-			break;*/
-
+		case 'o':
+			if (lvl_nb%7 == 0) open_door(); //Visit things in towns.
+			break;
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin
@@ -93,5 +92,5 @@ int main(void)
 	
 	clean_exit(0);
 	 
-	return EPIC_WIN;
+	return 1;
 }

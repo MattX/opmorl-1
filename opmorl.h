@@ -28,8 +28,6 @@
 #ifndef DEBUG
 #define DEBUG 0
 #endif
-#define EPIC_WIN  EXIT_SUCCESS
-#define EPIC_FAIL EXIT_FAILURE
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS, T_DOOR } Tile;
 Tile lvl_map[12][22];
@@ -103,6 +101,8 @@ Object * o_list;
 void fill_map();
 void display_map();
 void display_msg();
+void display_man();
+void display_state();
 void first_init();
 void move_letter(char);
 int  fight(int, int); //Returns result of the fight. 0 : nothing, 1 : monster dies, 2 : Rodney dies.
@@ -119,8 +119,15 @@ void show_monsters();
 void show_objects();
 #endif
 int  m_fight(); //Both fights return 1 if target killed.
-int  p_fight(int, int); //Value return of 2 means there wasn't a monster. It should however never happen.
-void make_town();
+int  p_fight(int, int); //Value return of 2 means there wasn't a monster. 
+						//It should however never happen.
+void make_town(); //6 following funcs are defined in special.c, they shalt refer to towns.
+void open_door(); 
+void shop();
+void spt();
+void castle();
+void special();
+
 void man();
 
 int clean_exit(int);

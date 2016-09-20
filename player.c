@@ -173,7 +173,7 @@ void drop() {
 	if (armor  != NULL) printf("12. equipped armor : %s\n",  armor->name);
 	printf("Which object do you want to drop ?");
 	scanf("%d", &index);
-	if (drop_object(index) == EPIC_FAIL)	//For some unknown reason, drop() returns 0 if success (?) /* No, it returns EPIC_WIN N00B */
+	if (drop_object(index) == 0)	//For some unknown reason, drop() returns 0 if success (?) /* No, it returns 1 N00B */
 		display_msg(fail);
 }
 
@@ -245,4 +245,18 @@ void display_state() {
 		if (inventory[i])
 			printf("A %s.\n", inventory[i]->name);
 	putchar('\n');
+}
+
+void open_door() { 
+	if (lvl_map[rodney.posx][rodney.posy] == T_DOOR) { 
+		if (rodney.posx == 3 && rodney.posy == 5)			//North West
+			shop();
+/*		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
+			spt();
+		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
+			castle(); //TODO: Write this func.
+		else												//South East
+			special();			
+ */
+	}
 }
