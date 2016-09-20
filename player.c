@@ -3,7 +3,8 @@
  *
  *  Created on: 2 dec. 2009
  *      Author: zale
- *      Owner: both
+ *      Owner : both
+ *	Copyright : Opmorl, inc.
  */
 
 #include "opmorl.h"
@@ -176,18 +177,58 @@ void drop() {
 		display_msg(fail);
 }
 
+void display_man() {
+	printf("h, j, k, l : move\n"
+		   "q : save'n'quit\n"
+		   "> : when on stairs (>), get down the next level\n"
+		   "d : drop\n"
+		   ", : loot\n"
+		   "z : zap\n"
+		   "b : drink\n" 
+		   "m : the man. Readable once a game.\n");
+}
+
 void man() {
 	static int nb = 0;
-	if (!nb) {
-		printf("h, j, k, l : move\n"
-			   "q : save'n'quit\n"
-			   "> : when on stairs (>), get down the next level\n"
-			   "d : drop\n"
-			   ", : loot\n"
-			   "z : zap\n"
-			   "b : drink\n" 
-			   "m : the man. Readable once a game.\n");
-		nb++;
-	}
-	else printf("You have already read the man.\n");
+	if (!nb)
+		display_man();
+	else
+		switch (nb) {
+			case 1:
+				printf("Didn't I tell you the man is ONCE only ?\n");
+				break;
+			case 2:
+				printf("You wanna read it once more, don't you, n00b ?\n");
+				break;
+			case 3:
+				printf("Well, OK, because it's you. But stop pissing me.\n");
+				display_man();
+				break;
+			case 4:
+				printf("Fuck off.\n");
+				break;
+			case 5:
+				printf("The next time you try this, you die.\n");
+				break;
+			case 6:
+				printf("You don't believe me ? You don't believe in my ultimate power ? I am Buddha, I do whatever I want.\n");
+				break;
+			case 7:
+				printf("You're dead.\n");
+				break;
+			case 8:
+				printf("Did you believe this time ? I won't answer again.\n");
+				break;
+			case 9:
+				printf("You want a confirmation ? Go to New Zealand to see if I'm there.\n");
+				break;
+			case 10:
+				printf("Found me ? N00b. Now I will sleep for ten years.\n");
+				break;
+			case 100:
+				printf("You woke me up. Die.\n");
+				clean_exit(0);
+				break;
+		}
+	nb++;
 }

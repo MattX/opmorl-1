@@ -3,6 +3,7 @@
  *
  *  Created on: 2 dec. 2009
  *      Author: zale (shame on him)
+ *	Copyright : Opmorl, inc.
  */
 
 #include <stdio.h>

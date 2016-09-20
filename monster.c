@@ -2,8 +2,8 @@
  * monster.c
  *
  *  Created on: 3 dec. 2009
- *      Author: Matthieu (SPELLING *WAS* CORRECT)
- *      Owner: zale
+ *      Author: Mathieu (SPELLING *WAS* CORRECT)
+ *	Copyright : Opmorl, inc.
  */
 
 #include "opmorl.h"
@@ -22,7 +22,7 @@ Monster m_default[14] =
 		  { 0, 0, "Grue",      20, 0, 1, 0, 0, 10, 15, NULL },
 		  { 0, 0, "Rat",       5,  0, 0, 0, 0, 1,  5,  NULL },
 		  { 0, 0, "U-golem",   5,  0, 0, 0, 0, 1,  5,  NULL },
-		  { 0, 0, "Ware-wolf", 6,  0, 0, 0, 0, 3,  8,  NULL },
+		  { 0, 0, "Werewolf" , 6,  0, 0, 0, 0, 3,  8,  NULL },
 		  { 0, 0, "Kobold",    5,  0, 0, 0, 0, 2,  10, NULL }
 		};
 

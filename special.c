@@ -3,7 +3,8 @@
  *
  *  Created on: 17 dec. 2009
  *      Author: zale
- *      Owner: zale
+ *		Owner : zale
+ *	Copyright : Opmorl, inc.
  */
 
 #include "opmorl.h"

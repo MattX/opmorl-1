@@ -3,7 +3,7 @@
  *  OPMORL
  *
  *  Created by Théotime Grohens on 13/01/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
+ *  Copyright 2010 Opmorl, inc. All rights reserved.
  *
  *	Purpose : handle all fight funcs in one file, for evident reasons.
  *
@@ -15,8 +15,7 @@
 #include "opmorl.h"
 #include "objet.h"
 
-/* ABSOLUTELY TO BE CALLED WHEN A MONSTER MOVES ONTO RODNEY'S POSITION,				*
- *THEREFORE TO BE CALLED FROM M_MOVE() & FIGHT() WHICH IS CALLED BY MOVE_LETTER()	*/
+/* ABSOLUTELY TO BE CALLED WHEN A MONSTER MOVES ONTO RODNEY'S POSITION	*/
 int m_fight()
 {
 	Monster * mon;

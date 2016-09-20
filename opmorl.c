@@ -4,7 +4,7 @@
  Author      : zale
  Version     : 0.2-pre
  Copyright   : 2009 Opmorl Team
- Description : Opmorl - temporary main file.
+ Description : Opmorl - main file.
  ============================================================================
  */
 
@@ -35,7 +35,7 @@ void loop()
 			move_letter(c);
 			break;
 		case '>':
-			new_level();
+			new_level(); //TODO: fix this.
 			break;
 		case 'L':
 			show_monsters();
@@ -47,7 +47,7 @@ void loop()
 		case 'd':
 			drop(); 
 			break;
-			case 'W':
+		case 'W':
 			wish();
 			break;
 		case ',':
@@ -62,6 +62,10 @@ void loop()
 		case 'e':
 			equip_display(); //equip() wrapper
 			break;
+		case 'p':
+			drink();
+			break;
+
 
 		}
 		turn++;

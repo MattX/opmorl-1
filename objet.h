@@ -3,7 +3,7 @@
  *  OPMORL
  *
  *  Created by theotime grohens on 04/12/09.
- *  Copyright 2009 __MyCompanyName__. All rights reserved.
+ *  Copyright 2009 Opmorl, inc. All rights reserved.
  *
  */
 #ifndef OBJET_H_

@@ -3,6 +3,10 @@
  *
  *  Created on: 2 dec. 2009
  *     Authors: zale&ttthebest&buddha
+ *	Copyright : Opmorl, inc.
+ * 
+ *	Special thanks to : nobody yet.
+ *
  */
 
 #ifndef OPMORL_H_
@@ -86,7 +90,7 @@ extern Monster m_default[14];
 Monster * m_list;
  
 
-extern Object o_default[17];
+extern Object o_default[16];
 
 Object * o_list; 
 
