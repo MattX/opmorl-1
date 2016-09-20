@@ -61,4 +61,7 @@ void fight(Monster * mon);
 Monster * add_monster(Monster mon, int posx, int posy);
 void free_monsters(Monster * mon);
 
+int min(int a, int b);
+int max(int a, int b);
+
 #endif /* OPMORL_H_ */

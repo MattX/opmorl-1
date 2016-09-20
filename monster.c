@@ -6,6 +6,7 @@
  */
 
 #include "opmorl.h"
+#include <string.h>
 
 /* The 5 following functions are known to work correctly */
 

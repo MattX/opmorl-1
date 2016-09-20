@@ -11,8 +11,6 @@ typedef enum {
 	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S
 } Class; /* ARMOR_B : body ; ARMOR_S : shield */
 
-typedef struct obj_type {
-	Class class;
 typedef struct obj_type { Class class;
 	char name[50];
 	int posx, posy; 
@@ -35,6 +33,8 @@ Object add_object(Object obj); /* Alloc room for a new object in obj_list,
 								  * then copy the obj parameter into it. */
 /* @return a pointer on the new object */
 int isSomething(int posx, int posy);
+int isObject(int posx, int posy);
+int isMonster(int posx, int posy);
 void rm_object(int posx, int posy); /* Remove the object at posx, posy */
 void free_objects(); /* free() all the list */
 int find_near_free_tile(int * posx, int * posy);

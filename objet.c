@@ -7,18 +7,16 @@
  *
  */
 
-
-//here's what I had done at dec. 6 hh:mm
 #include <stdlib.h>
 #include <string.h>
 #include "objet.h"
+#include "opmorl.h"
 
 /*** VERY IMPORTANT NOTE : FUNCTION NAMES CHANGED TO USE
  *** THE SAME SPEC AS IN MONSTER.C. PLEASE CHECK OUT OBJET.H
  ***/
 
 Object add_object(Object obj) {
-	int i;
 	Object *new = malloc(sizeof(Object));
 
 	*new = obj;
@@ -70,9 +68,9 @@ int find_near_free_tile(int * posx, int * posy) {
 	}
 	else if (isSomething(curx+1, cury) == 0) {
 		*posx = curx+1;
-		ok++
+		ok++;
 	}
-	else if (isSomething(curx, curyy-1) == 0) {
+	else if (isSomething(curx, cury-1) == 0) {
 		*posy = cury-1;
 		ok++;
 	}
@@ -99,5 +97,15 @@ int find_near_free_tile(int * posx, int * posy) {
 
 	if (ok)
 		return 1;
+	return 0;
+}
+
+int isObject(int posx, int posy) {
+	//TODO
+	return 0;
+}
+
+int isMonster(int posx, int posy) {
+	//TODO
 	return 0;
 }

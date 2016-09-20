@@ -8,6 +8,7 @@
 #include "opmorl.h"
 
 void corridor_gen();
+void big_gen();
 
 /** fill_map - generate a map
  * So, we can generate two kinds of maps : a big room or
@@ -22,7 +23,7 @@ void fill_map()
 	if(rnd_max(0,1) == 1) big_gen();
 	else corridor_gen();
 
-	make_monsters();
+	//make_monsters();
 	//make_objects();
 }
 
