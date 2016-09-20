@@ -13,9 +13,10 @@
 
 /* ARGNOTUSED */
 int clean_exit(int dummy) // Can I know the purpose of an argnotused when you could say int clean_exit() {...} ? Don't fly with the ROFLCOPTER !
+						  // WELL, (1) read signal() doc (2) read lint doc.
 {
 	int i;
-
+	save();
 	free_monsters(m_list);
 	free_objects(o_list);
 	if(weapon) free(weapon);
@@ -31,8 +32,23 @@ void loop()
 	char c;
 
 	while(42) {
+		if(turn_spent)
+			m_move();
+
 		display_map();
-		fflush(stdout);
+
+		if(turn_spent) {
+			turn++;
+			m_fight();
+			regain_hp_in--;
+			if(regain_hp_in == 0) {
+				if(rodney.hp < rodney.max_hp)
+					rodney.hp++;
+				regain_hp_in = 5;
+			}
+		}
+		turn_spent = 0;
+
 		c = getchar();
 		switch(c) {
 		case 'q':
@@ -56,6 +72,12 @@ void loop()
 			break;
 		case 'W':
 			wish();
+			break;
+		case 'A':
+			add_rat();
+			break;
+		case 'E': //Eradicate
+			free_monsters(m_list);
 			break;
 #endif
 		case ',':
@@ -82,16 +104,19 @@ void loop()
 		case 'b':
 			bow_display();	//bow() wrapper
 			break;
-
 		}
-		turn++;
+
 		while((c = getchar()) != '\n'); // Flush stdin
 	}
 }
 
 int main(void)
 {
-	srand(time(NULL));
+	int seed = time(NULL);
+
+	srand(seed);
+	fprintf(stderr, "seed = %d\n", seed);
+	printf("OPMORL-alpha revision " REVISION "\n");
 	first_init();
 	fill_map();
 
@@ -101,5 +126,6 @@ int main(void)
 	
 	clean_exit(0);
 	 
+	save();
 	return 1;
 }

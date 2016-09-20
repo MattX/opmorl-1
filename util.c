@@ -34,6 +34,15 @@ int rnd_max(int a, int b)
 	return rand()%(b-a+1) + a; /* yeah, better */
 }
 
+void swap(int * a, int * b)
+{
+	int tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
 
 //NOW WTF IS THIS ?
 char choice(char c, char d, char * msg) {

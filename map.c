@@ -11,12 +11,6 @@
 void corridor_gen();
 void big_gen();
 
-/** fill_map - generate a map
- * So, we can generate two kinds of maps : a big room or
- * two small rooms. There is a 50% chance to get a big room.
- * We also might want to add a third kind of map for the last level
- * (amulet level). Yep we do.
- */
 
 void clear_status()
 {
@@ -29,9 +23,10 @@ void clear_status()
 
 void new_level()
 {
-	if(!DEBUG)
-		if(lvl_map[rodney.posx][rodney.posx] != T_STAIRS)
-			return;
+#ifdef DEBUG
+	if(lvl_map[rodney.posx][rodney.posx] != T_STAIRS)
+		return;
+#endif
 
 	free_monsters(m_list);
 	free_objects(o_list);
@@ -43,6 +38,13 @@ void new_level()
 
 	check_visit();
 }
+
+
+/** fill_map - generate a map
+ * So, we can generate two kinds of maps : a big room or
+ * two small rooms. There is a 50% chance to get a big room.
+ */
+
 
 void fill_map()
 {
@@ -205,4 +207,8 @@ void corridor_gen() {
 		lvl_map[6][doord3] = T_CORRIDOR;
 	
 	//We don't need to move rodney's pos, it is the former stairs one.
+	//Except if the former stairs pos is in a wall in the next level.
+	if(lvl_map[rodney.posx][rodney.posy] == T_WALL ||
+			lvl_map[rodney.posx][rodney.posy] == T_NONE)
+		rodney.posx = rodney.posy = 2;
 }

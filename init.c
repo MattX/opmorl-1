@@ -15,7 +15,6 @@
 void first_init()
 {
 	int i;
-	srand(time(NULL));
 
 	rodney.gold = 300;
 	rodney.posx = 1;
@@ -25,6 +24,8 @@ void first_init()
 	rodney.exp_lvl = 1;
 	rodney.hp = rodney.max_hp = 10;
 	rodney.arrows = 0;
+
+	regain_hp_in = 5;
 
 	weapon = malloc(sizeof(Object));
 	*weapon = o_default[7];
@@ -38,6 +39,7 @@ void first_init()
 
 	lvl_nb = 1;
 	turn = 0;
+	turn_spent = 0;
 
 	clear_status();
 }

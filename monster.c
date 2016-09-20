@@ -117,17 +117,16 @@ void free_monsters(Monster * mon)
 	m_list = NULL;
 }
 
-//TODO: write this func.
 void m_move()
 {
 	Monster * current = m_list;
 
 	while(current != NULL) {
-		if(!current->awake) continue;
-		/*Here, write some code that (a) finds the shortest way to the player
-									 (b) returns the first step of this path. */
-			//#define Dijkstra(x) ((x)*(x)*(x)+1)
-		
+		if(!current->awake) {
+			current = current->next;
+			continue;
+		}
+		mon_move(current->posx, current->posy);
 		current = current->next;
 	}
 }
@@ -144,8 +143,78 @@ int m_valid(int x, int y)
 	return 0;
 }
 
+/** fmonat - find monster at.
+ * @return a pointer on the monster.
+ * @return NULL if no monster found, rod may be set to 1 if rodney found.*/
+
+Monster * fmonat(int x0, int y0, int x1, int y1, int * rod)
+{
+	int steep = abs(y1 - y0) > abs(x1 - x0);
+	int deltax, deltay, error;
+	int y, ystep;
+	int x;
+	Monster * mon;
+
+	if(steep) {
+		swap(&y0, &x0);
+		swap(&y1, &x1);
+	}
+
+	if(x0 > x1) {
+		swap(&x0, &x1);
+		swap(&y0, &y1);
+	}
+
+	deltax = x1-x0;
+	deltay = abs(y1 - y0);
+	error = deltax/2;
+	y = y0;
+
+	if(y0 < y1) ystep = 1;
+	else ystep = -1;
+
+	for(x = x0; x <= x1; x++) {
+		if(steep) {
+			if((mon = get_monster(y, x)))
+				return mon;
+			if(y == rodney.posx && x == rodney.posy && x != x0 && y != y0) {// SIC.
+				*rod = 1;
+				return NULL;
+			}
+		} else {
+			if((mon = get_monster(x, y)))
+				return mon;
+			if(x == rodney.posx && y == rodney.posy && x != x0 && y != y0) {
+				*rod = 1;
+				return NULL;
+			}
+		}
+
+		error -= deltay;
+		if(error < 0) {
+			y += ystep;
+			error += deltax;
+		}
+	}
+
+	return NULL;
+}
+
+#ifdef DEBUG
+void add_rat()
+{
+	int x, y;
+
+	printf("Where ? ");
+	scanf("%d%d", &x, &y);
+
+	rm_monster(x, y);
+	add_monster(m_default[10], x, y);
+}
+#endif
 
 /** DIRTY CODE */
+/* TODO: rewrite this part*/
 
 void make_monsters()
 {
