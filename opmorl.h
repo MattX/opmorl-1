@@ -139,6 +139,8 @@ int max3(int, int, int);
 int rnd_max(int,int);
 void check_visit();
 
+char choice(char, char, char*);
+
 #include "objet.h"
 
 #endif /* OPMORL_H_ */

@@ -222,10 +222,10 @@ void man() {
 				printf("Did you believe this time ? I won't answer again.\n");
 				break;
 			case 9:
-				printf("You want a confirmation ? Go to New Zealand to see if I'm there.\n");
+				printf("You want a confirmation ? Go to New Zealand's baboon paradise to see if I'm there.\n");
 				break;
 			case 10:
-				printf("Found me ? N00b. Now I will sleep for ten years.\n");
+				printf("Found me up there ? N00b. Now I will sleep for ten years.\n");
 				break;
 			case 50:
 				printf("You woke me up. Die. And learn the man.\n");

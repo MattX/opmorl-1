@@ -67,11 +67,7 @@ void shop() { //This func's gotta whole buncha loops&conditions... //O RLY ? (th
 	printf("Welcome to the shop ! Here, you can buy and sell objects !\n\n");
 		//Main loop
 	while (a) {
-		while (c != 'b' && c != 's') { //Deeplys fails, ROFL
-			printf("Buy (b) or sell (s) ?");
-			c = getchar();
-			getchar(); //For the \n
-		}
+		c = choice('b', 's', "Buy (b) or sell (s) ?")
 		if (c == 's') { //Sell mode. Here, we assume we can sell our equipped items.
 			while (b == 'y') { 
 					//Here the guy's got objects
@@ -137,11 +133,7 @@ void shop() { //This func's gotta whole buncha loops&conditions... //O RLY ? (th
 			   //TODO: Buy mode.
 		} 
 		
-		do {
-			printf("Leave the shop (y/n) ?\n");
-			a = getchar();
-			getchar();
-		} while (a != 'y' && a != 'n');
+		a = choice('y', 'n', "Leave the shop (y/n) ?\n")
 	
 	}
 	printf("\"Bye ! Hope to see ya soon !!\", says the happy shopkeeper as you leave.\n");

@@ -244,6 +244,8 @@ void equip(int inv_index) //TODO: Fix this func.
 		case C_ARMOR_S:
 			slot = SHIELD_SLOT;
 			break;
+		default:		//In case the user chose a shit.
+			return;
 	}
 	
 	switch(slot) {
@@ -287,7 +289,7 @@ void make_objects()
 {
 	int nb_gen = rnd_max(2, 6);
 	int posx, posy;
-	int ri; // ri for remind, idiot ! BTW how could I remember, OMG.
+	int ri; // ri for remind, idiot ! BTW how could I remember, OMG I so rock.
 
 	while(nb_gen--) {
 		ri = rnd_max(0, 16);
@@ -308,8 +310,11 @@ void make_objects()
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
 {									//TODO: Fix this apparently not working func. 
 	int i;
+	if (x < 0 || x >= 12 ||
+		y < 0 || y >= 22) 
+		return;
 	Monster *mon = get_monster(x, y);
-	if (!mon) return;
+	if (mon == NULL) return;
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
