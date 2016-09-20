@@ -18,16 +18,6 @@ int clean_exit(int dummy)
 	exit(EXIT_SUCCESS);
 }
 
-int min(int a, int b)
-{
-	return a<b ? a:b;
-}
-
-int max(int a, int b)
-{
-	return a>b ? a:b;
-}
-
 void loop()
 {
 	char c;
@@ -44,6 +34,7 @@ void loop()
 			move_letter(c);
 			break;
 		}
+		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin
 	}
 }

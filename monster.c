@@ -1,12 +1,11 @@
 /*
  * monster.c
  *
- *  Created on: 3 déc. 2009
+ *  Created on: 3 dec. 2009
  *      Author: Matthieu
  */
 
 #include "opmorl.h"
-#include <string.h>
 
 /* The 5 following functions are known to work correctly */
 
@@ -62,6 +61,7 @@ Monster * get_monster(int posx, int posy)
 
 /* NOTE : it's not an error to call rm_monster on an unexisting
  * function. TTTHEBEST : did you mean an unexisting position ?
+ * ZALE : No, i meant position containing no monster.
  */
 void rm_monster(int posx, int posy)
 {
@@ -98,4 +98,8 @@ void fight(Monster * mon)
 {
 	mon->hp -= 5;
 	mon->awake = 1; /* Wake up monster */
+}
+
+void make_monsters()
+{
 }

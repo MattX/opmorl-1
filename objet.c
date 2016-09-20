@@ -3,7 +3,7 @@
  *  OPMORL
  *
  *  Created by theotime grohens on 04/12/09.
- *  Copyright 2009 MyWare, inc. All rights reserved.
+ *  Copyright 2009 OPMORL Coding Team. All rights reserved.
  *
  */
 
@@ -100,6 +100,7 @@ int find_near_free_tile(int * posx, int * posy) {
 	return 0;
 }
 
+/* The two following functions are fucking ENOTNEEDED */
 /* This function is not KNOWN to work, but where could bugs hide in 5 lines of code ? */
 
 int isObject(int posx, int posy) {

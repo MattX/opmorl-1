@@ -25,10 +25,12 @@ Object * obj_list;
 Object add_object(Object obj); /* Alloc room for a new object in obj_list,
 								  * then copy the obj parameter into it. */
 /* @return a pointer on the new object */
-Object *get_object(int posx, int posy);
+Object * get_object(int posx, int posy);
 int isSomething(int posx, int posy);
+/* NOTNEEDED */
 int isObject(int posx, int posy);
 int isMonster(int posx, int posy);
+/* ENDNOTNEEDED */
 void rm_object(int posx, int posy); /* Remove the object at posx, posy */
 void free_objects(); /* free() all the list */
 int find_near_free_tile(int * posx, int * posy);
