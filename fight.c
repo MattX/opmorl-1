@@ -41,19 +41,20 @@ int m_fight()
 	return 0;
 }
 
-//TODO: fix in & around here the exp, lvl and maxhp code.
-//TODO: merge bow() with this function, at least partially.
 int p_fight(int x, int y)
 {
 	Monster * mon = get_monster(x, y);
-	int base_att = (rodney.exp_lvl/2) + (rodney.sword_b/20);
+	int base_att = rodney.exp_lvl/2;
 	
 	if(mon == NULL) return 2;
 	if (weapon->class == C_SWORD) {
-		mon->hp -= base_att + weapon->attack;
+		mon->hp -= base_att + rodney.sword_b/20 + weapon->attack;
 		rodney.sword_b++;
+	} else if(weapon->class == C_BOW) {
+		mon->hp -= base_att + rodney.bow_b/20 + weapon->attack;
+		rodney.bow_b++;
+		rodney.arrows--;
 	}
-	//bow code here.
 	else
 		mon->hp -= base_att + 1;
 

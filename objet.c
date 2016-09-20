@@ -269,7 +269,6 @@ void equip(int inv_index) //MYSTERIOUS THINGS AROUND HERE. PLEASE DO NOT TOUCH
 	}
 	
 	inventory[inv_index] = tmp;
-	//TODO: test the following
 	if(inventory[inv_index] == NULL)
 		just_dropped(inv_index);
 }
@@ -311,22 +310,14 @@ void make_objects()
 
 /** DIRTY CODE ENDS HERE, FOR GOD'S SAKE */
 
+/* BOW() IS OBSELETE */
+//TODO: remove this func.
 void bow (int x, int y) {
 	if (x < 0 || x >= 12 ||
-		y < 0 || y >= 22) 
+		y < 0 || y >= 22)
 		return;
-	Monster * mon = get_monster(x, y);
-	if (mon == NULL) return;
-	mon->hp -= weapon->attack;
-	rodney.arrows--;
-	printf("You shot the monster for %d damage", weapon->attack);
-	if (mon->hp < 1) {
-		printf(" and it died.\n");
-		rm_object(x, y);
-	}
-	else 
-		printf(", it has %d HP remaining.\n", mon->hp);
-	printf("You have %d arrow(s) left.\n", rodney.arrows);
+	p_fight(x, y);
+
 }
 
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			

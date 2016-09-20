@@ -126,6 +126,7 @@ int  p_fight(int, int); //Value return of 2 means there wasn't a monster.
 void make_town(); //6 following funcs are defined in special.c, they shalt refer to towns.
 void open_door(); 
 void shop();
+void school();
 void spt();
 void castle();
 void special();
@@ -140,11 +141,11 @@ int min3(int, int, int);
 int max3(int, int, int);
 int rnd_max(int,int);
 void check_visit();
-void teleport(int);
 
 char choice(char, char, char*);
 
 void check_exp_lvl();
+int take_gold(int);
 
 #include "objet.h"
 

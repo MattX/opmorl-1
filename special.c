@@ -20,7 +20,8 @@ char town_welcome[] =
  * (d) (maybe) (later) quests //We've got lots to do before quests. RLY.
  */
 
-/* make_town (see mockups for how a town looks)
+// A small historical note : the aftermentioned mock-ups did never exist.
+/* make_town (see mock-ups for how a town looks)
  * - fill the borders with T_WALLs.
  * - fill the building with T_WALLs, and place the doors.
  */
@@ -35,11 +36,11 @@ void make_town()
 		strcpy(name, "Enylbereth");
 		strcpy(special, "School");
 	} else if(!lvl_nb%14) {
-		strcpy(name, "Angbereth");
+		strcpy(name, "Arebereth");
 		strcpy(special, "Arena");
 	} else {
 		strcpy(name, "Dolbereth");
-		strcpy(special, "Silicon Sapphire");
+		strcpy(special, "Silicon on Sapphire");
 	}
 
 	//Borders, ground & buildings 
@@ -59,10 +60,6 @@ void make_town()
 
 	printf(town_welcome, name, special);
 }
-
-
-
-/* WARNING : New shop stuff is untested. */
 
 void sell()
 {
@@ -216,4 +213,64 @@ void spt() {
 		i = j = -1;
 	} while(retval);
 	printf("\"We'll take care of your stuff !\", says the SPT team as you close the door.\n");
+}
+
+int take_gold(int amount)
+{
+	if(rodney.gold >= amount) {
+		rodney.gold -= amount;
+		printf("Thank you !\n");
+		return 1;
+	} else {
+		printf("Sorry, you haven't got enough money !\n");
+		return 0;
+	}
+}
+
+
+//WARNING: completely untested.
+void school()
+{
+	char ret;
+	do {
+		printf("Welcome to the school ! Here, you can receive an advanced"
+				" fighter formation in exchange of gold.\n\n");
+
+		printf("Your current stats : \n");
+		printf("HP : %d (max %d)\n", rodney.hp, rodney.max_hp);
+		printf("Experience level : %d\n", rodney.exp_lvl);
+		/* Unfortunately, in order to stay realistic, there will be no
+		 * training for experience. */
+		printf("BONUS : sword %d, bow %d\n\n", rodney.sword_b/20, rodney.bow_b/20);
+		printf("Gold %d\n\n", rodney.gold);
+
+		printf("What do you want to buy ?\n");
+		printf("a. A lifepack (gives you full hp) : 50 gold.\n");				/*1*/
+		printf("b. An endurance training (max hp + 5) : 100 gold\n"); 			/*2*/
+		printf("c. A fencing training (sword bonus + 2) : 75 gold\n");			/*3*/
+		printf("d. An archery training (bow bonus + 2) : 75 gold\n");			/*4*/
+		printf("e. Leave the school\n");										/*5*/
+		scanf("%c", &ret);
+
+		switch(ret) {
+		case 'a':
+			if(take_gold(50))
+				rodney.hp = rodney.max_hp;
+			break;
+		case 'b':
+			if(take_gold(100))
+				rodney.max_hp += 5;
+			break;
+		case 'c':
+			if(take_gold(75))
+				rodney.sword_b += 40;
+			break;
+		case 'd':
+			if(take_gold(75))
+				rodney.bow_b += 40;
+			break;
+		default:
+			return;
+		}
+	} while(ret != 5); //This is a stupid condition actually
 }
