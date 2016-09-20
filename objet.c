@@ -8,32 +8,96 @@
  */
 
 
-//here's what I had done at dec. 4 23:26
-#include "opmorl.h"
+//here's what I had done at dec. 6 hh:mm
+#include <stdlib.h>
+#include <string.h>
 #include "objet.h"
 
-Object * add_obj_list(Object obj) {
+/*** VERY IMPORTANT NOTE : FUNCTION NAMES CHANGED TO USE
+ *** THE SAME SPEC AS IN MONSTER.C. PLEASE CHECK OUT OBJET.H
+ ***/
+
+Object add_object(Object obj) {
 	int i;
-	Object * current = obj_list;
-	Object * new = malloc(sizeof(Object));
+	Object *new = malloc(sizeof(Object));
 
 	*new = obj;
 	strcpy(new->name, obj.name);
-
-	if(obj_list == NULL) obj_list = new;
-	else while(current->next != NULL)
-		current = current->next;
-	current->next = new;
-
-	return new;
+	return *new;
 }
 
-//TODO: Correct the following code
+int isSomething(int posx, int posy) {
+	if (lvl_map[posx][posy] == T_FLOOR || lvl_map[posx][posy] == T_CORRIDOR)
+		if (isObject(posx, posy) || isMonster(posx, posy))
+			return 1;
+		return 0;
+	return 1;
+}
 
-void rm_obj_list(int posx, int posy) {
-	Object *temp = obj_list;
-	while ((temp->next->posx != posx) && (temp->next->posy != posy)) {
-		temp = temp->next;
+void rm_object(int posx, int posy)
+{
+	Object * current = m_list;
+	Object * tmp;
+
+	if(current == NULL) return;
+
+	if(current->posx == posx && current->posy == posy) {
+		free(current);
+		m_list = current->next;
 	}
-	temp->next = temp->next->next;//I think there's a problem in this func but I am not very pro in listes chainees manipulating
+	while(current->next != NULL) {
+		if(current->next->posx == posx && current->next->posy == posy) {
+			tmp = current->next->next;
+			free(current->next);
+			current->next = tmp;
+			break;
+		}
+		current = current->next;
+	}
+}
+
+int find_near_free_tile(int * posx, int * posy) {
+	int ok = 0;
+	int curx = rodney.posx;
+	int cury = rodney.posy;
+	if (isSomething(curx-1, cury) == 0) {
+		*posx = curx-1;
+		ok++;
+	}
+	else if (isSomething(curx, cury+1) == 0) {
+		*posy = cury+1;
+		ok++;
+	}
+	else if (isSomething(curx+1, cury) == 0) {
+		*posx = curx+1;
+		ok++
+	}
+	else if (isSomething(curx, curyy-1) == 0) {
+		*posy = cury-1;
+		ok++;
+	}
+	else if (isSomething(curx-1, cury-1) == 0) {
+		*posx = curx-1;
+		*posy = cury-1;
+		ok++;
+	}
+	else if (isSomething(curx-1, cury+1) == 0) {
+		*posx = curx-1;
+		*posy = cury+1;
+		ok++;
+	}
+	else if (isSomething(curx+1, cury+1) == 0) {
+		*posx = curx+1;
+		*posy = cury+1;
+		ok++;
+	}
+	else if (isSomething(curx+1, cury-1) == 0) {
+		*posx = curx+1;
+		*posy = cury-1;
+		ok++;
+	}
+
+	if (ok)
+		return 1;
+	return 0;
 }

@@ -15,6 +15,7 @@ Monster * add_monster(Monster mon, int posx, int posy)
 	Monster * new = malloc(sizeof(Monster));
 
 	*new = mon;
+	strcpy(new->name, mon.name);
 	if(posx > -1)
 		new->posx = posx;
 	if(posy > -1)
