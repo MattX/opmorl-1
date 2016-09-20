@@ -41,6 +41,10 @@ void loop()
 			show_monsters();
 			printf("HP = %d\n", rodney.hp);
 			break;
+		case 'd':
+			drop();
+			break;
+
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin

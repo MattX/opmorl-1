@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include "opmorl.h"
+#include "objet.h"
 
 #define V_NO 0
 #define V_YES 1
@@ -131,4 +132,15 @@ void move_letter(char c)
 
 	}
 	check_visit();
+}
+
+void drop() {
+	int i, index;
+	while (inventory[i] != NULL) {
+		printf("%s\n", inventory[i]->name);
+	}
+	printf("Which object to drop ?");
+	scanf("%d", &index);
+	if (!drop_object(index))
+		printf("Drop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
 }
