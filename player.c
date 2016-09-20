@@ -151,7 +151,7 @@ void move_letter(char c)
 
 	}
 	
-	if (mon) //This is weird, we should change p_fight.
+	if (mon == 1) //This is weird, we should change p_fight.
 		display_msg("You killed the monster");
 	check_visit();
 }
