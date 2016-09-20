@@ -17,7 +17,7 @@ char town_welcome[] =
 /* This file contains functions for :
  * (a) towns (lvls 7, 14 & 21)
  * (b) the last level & win (lvl 25) //TODO: This
- * (c) the graveyard (lvl 18 to 20) //Maybe you could have told me about that... //TODO: decide wether to do this.
+ * (c) the graveyard (lvl 18 to 20) //Maybe you could have told me about that... //TODO: decide whether to do this.
  * (d) (maybe) (later) quests //We've got lots to do before quests. RLY.
  */
 
@@ -72,6 +72,7 @@ void sell()
 
 	printf("You have : \n");
 	for (i = 0; i < 10; i++)
+		if (inventory[i])
 			printf("%d. A %s. Value : %d\n", i, inventory[i]->name, (int)(0.66*(double)inventory[i]->val)); //We sell objects at 2/3 of their value. OK
 	if (weapon)
 		printf("Equipped weapon (10) : a %s, value %d\n", weapon->name, (int)(0.66*(double)weapon->val));
@@ -83,15 +84,15 @@ void sell()
 	printf("What do you want to sell ? "); //At first sight I thought it was a word game numBer/B/Q. 
 	scanf("%d", &object);
 
-	if(object < 0 || !inventory[object] || (object == 10 && !weapon)||
-				(object == 11 && !armor) || (object == 12 && !shield)) {
+		if(object < 0 || !inventory[object] || (object == 10 && !weapon)||
+		(object == 11 && !armor) || (object == 12 && !shield)) {
 		printf("You cannot sell this.\n");
-	} else {
+						//} else {
 		obj = amgo(object);
 		rodney.gold += 0.66*(double)obj->val;
 		free(obj);
 		just_dropped(object);
-	}
+						//}
 }
 
 void buy()

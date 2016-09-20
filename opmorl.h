@@ -138,6 +138,7 @@ int min3(int, int, int);
 int max3(int, int, int);
 int rnd_max(int,int);
 void check_visit();
+void teleport(int);
 
 char choice(char, char, char*);
 

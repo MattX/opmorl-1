@@ -236,6 +236,7 @@ void man() {
 
 void display_state() {
 	int i;
+	if (weapon) printf("Weapon : a %s\n", weapon->name);
 	printf("Life	: %d\n", rodney.hp);
 	printf("Arrows	: %d\n", rodney.arrows);
 	printf("Gold	: %d\n", rodney.gold);
@@ -257,4 +258,9 @@ void open_door() {
 			special();			
  */
 	}
+}
+
+void teleport(int i) {
+	lvl_nb = i;
+	rodney.posx = rodney.posy = 2;
 }

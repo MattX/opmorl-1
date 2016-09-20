@@ -22,6 +22,7 @@ int clean_exit(int dummy) // Can I know the purpose of an argnotused when you co
 void loop()
 {
 	char c;
+	int hello;
 
 	while(42) {
 		display_map();
@@ -43,7 +44,6 @@ void loop()
 #ifdef DEBUG
 		case 'L':
 			show_monsters();
-			printf("HP = %d\n", rodney.hp);
 			break;
 		case 'O':
 			show_objects();
@@ -51,6 +51,11 @@ void loop()
 		case 'W':
 			wish();
 			break;
+		case 'T':
+			scanf("%d", &hello);
+			teleport(hello);
+			break;
+
 #endif
 		case ',':
 			getObject();
@@ -73,6 +78,10 @@ void loop()
 		case 'o':
 			if (lvl_nb%7 == 0) open_door(); //Visit things in towns.
 			break;
+		case 'b':
+			bow_display();	//bow() wrapper
+			break;
+
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin

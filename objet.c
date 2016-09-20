@@ -32,7 +32,6 @@ Object o_default[17] = {
 /* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,  0,	0,	0,	K,	750,NULL},
 /* 16*/ {C_GOLD,	"Some pieces of gold",	-1, -1,	 0,	0,	0,	0,	0,	NULL}}; /* DONE \o/ */ 
 
-
 Object * add_object(Object obj, int posx, int posy)
 {
 	Object * current = o_list;
@@ -208,8 +207,7 @@ Object * get_object(int posx, int posy)
 void getObject() {
 	int i = -1;
 	Object *tmp = get_object(rodney.posx, rodney.posy);
-	char tmpname[50]; // THIS IS A KLUGE.
-
+	if (!tmp) return;
 	if (tmp->class == C_GOLD) {
 		rodney.gold += tmp->val; 
 		rm_object(rodney.posx, rodney.posy); //As this line wasn't there you could make infinite gø|∂ ! ®øƒ| !
@@ -227,20 +225,16 @@ void getObject() {
 	}
 	
 	inventory[i] = malloc(sizeof(Object));
-	inventory[i] = tmp;
-
-	// the following lines are a kluge, but the obvious version of the code
-	// doesn't seem to work (??)
-	strncpy(tmpname, tmp->name, 49);
-	rm_object(rodney.posx, rodney.posy);
-	strncpy(inventory[i]->name, tmpname, 49);
+	*inventory[i] = *tmp;
 }
 
-void equip(int inv_index) //OLD TODO: Fix this func. // PLEASE DESCRIBE THE PROBLEM
+void equip(int inv_index) //MYSTERIOUS THINGS AROUND HERE. PLEASE DO NOT TOUCH
 {
 	Object * tmp;
 	int slot;
 
+	printf("%d\n", inv_index);
+	
 	if(inv_index < 0 || inv_index > 9 || inventory[inv_index] == NULL) return; //I actually think this line makes it fail.
 	
 	switch (inventory[inv_index]->class) {
@@ -257,21 +251,16 @@ void equip(int inv_index) //OLD TODO: Fix this func. // PLEASE DESCRIBE THE PROB
 		default: // I think the lack of default also made it fail.
 			return;
 	}
-	
 	switch(slot) {
 	case WEAPON_SLOT:
-		if(inventory[inv_index]->class != C_BOW || 
-		   inventory[inv_index]->class != C_SWORD) return;
 		tmp = weapon;
 		weapon = inventory[inv_index];
 		break;
 	case ARMOR_SLOT:
-		if(inventory[inv_index]->class != C_ARMOR_B) return;
 		tmp = armor;
 		armor = inventory[inv_index];
 		break;
 	case SHIELD_SLOT:
-		if(inventory[inv_index]->class != C_ARMOR_S) return;
 		tmp = shield;
 		shield = inventory[inv_index];
 		break;
@@ -317,12 +306,29 @@ void make_objects()
 
 /** DIRTY CODE ENDS HERE, FOR GOD'S SAKE */
 
+void bow (int x, int y) {
+	if (x < 0 || x >= 12 ||
+		y < 0 || y >= 22) 
+		return;
+	Monster * mon = get_monster(x, y);
+	if (mon == NULL) return;
+	mon->hp -= weapon->attack;
+	rodney.arrows--;
+	printf("You shot the monster for %d damage", weapon->attack);
+	if (mon->hp < 1) {
+		printf(" and it died.\n");
+		rm_object(x, y);
+	}
+	else 
+		printf(", it has %d HP remaining.\n", mon->hp);
+	printf("You have %d arrow(s) left.\n", rodney.arrows);
+}
+
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
 {									//TODO: Fix this apparently not working func. 
 	/*
 	 * The code in here should be *very* complicated. Not just like 15 lines.
 	 */
-	int i;
 	if (x < 0 || x >= 12 ||
 		y < 0 || y >= 22) 
 		return;
@@ -331,12 +337,14 @@ void zap(int x, int y, int index)	/* the index of the wand in the inventory */
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
+		printf("The monster lost %d HP", inventory[index]->target_hp);
 	}
-	if (!inventory[index]->shots_left) {
-		for (i = index; i < 9; i++)
-			inventory[index] = inventory[index+1];
-		inventory[9] = NULL;
+	if (mon->hp < 1) {
+		printf(" and died.\n");
+		rm_monster(x, y);
 	}
+	else 
+		printf(" and has %d remaining.\n", mon->hp);
 }
 
 void zap_display() {
@@ -350,6 +358,7 @@ void zap_display() {
 	if (is) {
 		printf("Which wand to use ? ");
 		scanf("%d", &wand);
+		if (!inventory[wand]) return;
 		if (inventory[wand]->class != C_WAND)  {
 			printf("This is not a wand.\n");
 			return;
@@ -382,6 +391,32 @@ void equip_display() {
 	equip(index); //IS not functional.
 }
 
+void bow_display() {
+	int x, y;
+	if (!weapon){
+		printf("You don't have a weapon.\n");
+		return;
+	}
+	else {
+		if (weapon->class != C_BOW) {
+			printf("Your weapon is not a bow. Please equip one.");
+			if (!rodney.arrows)
+				printf(" OBTW, you have no arrows left.\n");
+			else 
+				printf(" You have anyway %d arrows left.\n");
+			return;
+		}
+		else {
+			printf("You have a %s, with %d arrows.\n", weapon->name, rodney.arrows);
+			printf("Where to shoot ?\n");
+			scanf("%d%d", &x, &y);
+			bow(x, y);
+		}
+
+	}
+	
+}
+
 void drink() {
 	int i, is = 0, potion;
 	for (i = 0; i < 10; i++)
@@ -411,8 +446,7 @@ void drink() {
 	for (i = potion+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;
-
-	//TODO: Replace this by a chk_dead() function.
+		//TODO: add fucking chk_dead()
 	if (rodney.hp < 1) {
 		printf("You die, poisoned by a potion.");
 		clean_exit(0);
@@ -442,7 +476,7 @@ void just_dropped(int index)
 	if(index < 0 || index >= 10)
 		return;
 
-	free(inventory[index]); //You had forgotten this ! On an iPhone w/ ~60 Mo of RAM for you, we can't permit it.
+	free(inventory[index]); //You had forgotten this ! On an iP{ad|od|hone} w/ ~60 Mo of RAM for you, we can't permit it.
 	for (i = index+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;

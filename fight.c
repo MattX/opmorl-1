@@ -52,15 +52,7 @@ int p_fight(int x, int y)
 			//OMG, you need a bonus of 50 for 1 extra damage
 		rodney.sword_b++;
 	}
-	else if (weapon->class == C_BOW) {
-		if(!rodney.arrows)
-			printf("You have no arrows left.\n");
-		else {
-			mon->hp -= weapon->attack+  rodney.bow_b/50 + rodney.exp_lvl/3 + 1;
-			rodney.bow_b++;
-			rodney.arrows--;
-		}
-	}
+	
 	else /* Means there is no equipped weapon */
 		mon->hp -= rodney.exp_lvl / 3 + 1;
 	mon->awake = 1; /* Wake up monster */
