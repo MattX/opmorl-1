@@ -41,28 +41,33 @@ int m_fight()
 	return 0;
 }
 
+//TODO: fix in & around here the exp, lvl and maxhp code.
+//TODO: merge bow() with this function, at least partially.
 int p_fight(int x, int y)
 {
 	Monster * mon = get_monster(x, y);
+	int base_att = (rodney.exp_lvl/2) + (rodney.sword_b/20);
 	
 	if(mon == NULL) return 2;
-	printf("Weapon.class = %d\n", weapon->class); fflush(stdout);
 	if (weapon->class == C_SWORD) {
-		mon->hp -= weapon->attack + rodney.sword_b/50 + rodney.exp_lvl/3 + 1; 
-			//OMG, you need a bonus of 50 for 1 extra damage
+		mon->hp -= base_att + weapon->attack;
 		rodney.sword_b++;
 	}
-	
-	else /* Means there is no equipped weapon */
-		mon->hp -= rodney.exp_lvl / 3 + 1;
-	mon->awake = 1; /* Wake up monster */
+	//bow code here.
+	else
+		mon->hp -= base_att + 1;
+
+	rodney.exp_b++;
+
+	mon->awake = 1;
 	if(mon->hp <= 0) {
 		rm_monster(x, y);
+		rodney.exp_b++;
 		return 1;
 	}
-	if((rodney.bow_b + rodney.sword_b) % rodney.exp_lvl*rodney.exp_lvl+10)
-			//UGLY. It makes u level up at each kill.
-		printf("You have ascended to level %d\n", rodney.exp_lvl++);
+
+	check_exp_lvl();
+
 	return 0;
 }
 

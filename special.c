@@ -17,7 +17,6 @@ char town_welcome[] =
 /* This file contains functions for :
  * (a) towns (lvls 7, 14 & 21)
  * (b) the last level & win (lvl 25) //TODO: This
- * (c) the graveyard (lvl 18 to 20) //Maybe you could have told me about that... //TODO: decide whether to do this.
  * (d) (maybe) (later) quests //We've got lots to do before quests. RLY.
  */
 
@@ -85,7 +84,7 @@ void sell()
 	scanf("%d", &object);
 
 		if(object < 0 || !inventory[object] || (object == 10 && !weapon)||
-		(object == 11 && !armor) || (object == 12 && !shield)) {
+				(object == 11 && !armor) || (object == 12 && !shield)) {
 		printf("You cannot sell this.\n");
 						} else {
 		obj = amgo(object);
@@ -99,7 +98,7 @@ void buy()
 {
 	int i, index;
 	printf("Here, you can buy : \n");
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < 16; i++) //CONSTWARN
 		printf("%d. A %s. Value : %d\n", i, o_default[i].name, o_default[i].val);
 	printf("What do you want to buy ?\n");
 	scanf("%d", &index);
@@ -114,7 +113,12 @@ void buy()
 			rodney.arrows += 10;
 		else {
 			while (inventory[++i]);
-			inventory[i] = &o_default[index];
+			if(i >= 10) {
+				printf("Your inventory is full (of shit).\n");
+				return;
+			}
+			inventory[i] = malloc(sizeof(Object));
+			*inventory[i] = o_default[index];
 		}
 	}
 }
@@ -140,7 +144,7 @@ void shop()
 
 void recover() {
 	int i, val, j = -1;
-	if (!spt_inv) {
+	if (!spt_inv[0]) {
 		printf("There is nothing in the SPT.\n");
 		return;
 	}
@@ -160,13 +164,13 @@ void recover() {
 	free(spt_inv[val]);
 	spt_inv[val] = NULL;
 	for (i = val+1; i < 10; i++)
-		spt_inv[i-1] = spt_inv[j]; //this should _not_ segfault
+		spt_inv[i-1] = spt_inv[i]; //this should _not_ segfault
 	spt_inv[9] = NULL;
 }
 
 void give_spt() {
 	int i, val, j = -1;
-	if (!inventory) {
+	if (!inventory[0]) {
 		printf("There is nothing in your inventory.\n");
 		return;
 	}
@@ -186,7 +190,7 @@ void give_spt() {
 	free(inventory[val]);
 	inventory[val] = NULL;
 	for (i = val+1; i < 10; i++)
-		inventory[i-1] = inventory[j]; //this should _not_ segfault
+		inventory[i-1] = inventory[i]; //this should _not_ segfault
 	inventory[9] = NULL;
 }
 

@@ -14,15 +14,21 @@
 /* ARGNOTUSED */
 int clean_exit(int dummy) // Can I know the purpose of an argnotused when you could say int clean_exit() {...} ? Don't fly with the ROFLCOPTER !
 {
+	int i;
+
 	free_monsters(m_list);
 	free_objects(o_list);
+	if(weapon) free(weapon);
+	if(shield) free(shield);
+	if(armor) free(armor);
+	for(i = 0; i < 10; i++)
+		if(inventory[i]) free(inventory[i]);
 	exit(1);
 }
 
 void loop()
 {
 	char c;
-	int hello;
 
 	while(42) {
 		display_map();
@@ -51,11 +57,6 @@ void loop()
 		case 'W':
 			wish();
 			break;
-		case 'T':
-			scanf("%d", &hello);
-			teleport(hello);
-			break;
-
 #endif
 		case ',':
 			getObject();
@@ -91,7 +92,6 @@ void loop()
 int main(void)
 {
 	srand(time(NULL));
-	printf("%d", min3(3, 2, 1));
 	first_init();
 	fill_map();
 

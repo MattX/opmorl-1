@@ -226,6 +226,8 @@ void getObject() {
 	
 	inventory[i] = malloc(sizeof(Object));
 	*inventory[i] = *tmp;
+
+	rm_object(rodney.posx, rodney.posy);
 }
 
 void equip(int inv_index) //MYSTERIOUS THINGS AROUND HERE. PLEASE DO NOT TOUCH
@@ -267,6 +269,9 @@ void equip(int inv_index) //MYSTERIOUS THINGS AROUND HERE. PLEASE DO NOT TOUCH
 	}
 	
 	inventory[inv_index] = tmp;
+	//TODO: test the following
+	if(inventory[inv_index] == NULL)
+		just_dropped(inv_index);
 }
 
 void wish() //Segfault suspicion around here.
@@ -325,9 +330,10 @@ void bow (int x, int y) {
 }
 
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
-{									//TODO: Fix this apparently not working func. 
+{
 	/*
 	 * The code in here should be *very* complicated. Not just like 15 lines.
+	 * NOTE : the above comment is only for future versions of the code.
 	 */
 	if (x < 0 || x >= 12 ||
 		y < 0 || y >= 22) 
@@ -403,7 +409,7 @@ void bow_display() {
 			if (!rodney.arrows)
 				printf(" OBTW, you have no arrows left.\n");
 			else 
-				printf(" You have anyway %d arrows left.\n");
+				printf(" You have anyway %d arrows left.\n", rodney.arrows);
 			return;
 		}
 		else {
@@ -438,6 +444,7 @@ void drink() {
 		return;
 	}
 	rodney.hp+= inventory[potion]->target_hp;
+	rodney.hp = min(rodney.hp, rodney.max_hp);
 	if (inventory[potion]->target_hp > 0)
 		printf("You heal %d HP.\n", inventory[potion]->target_hp);
 	if (inventory[potion]->target_hp < 0 && rodney.hp > 0)
@@ -446,7 +453,7 @@ void drink() {
 	for (i = potion+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;
-		//TODO: add fucking chk_dead()
+	//TODO: add fucking chk_dead()
 	if (rodney.hp < 1) {
 		printf("You die, poisoned by a potion.");
 		clean_exit(0);
@@ -469,6 +476,9 @@ Object * amgo(int index) // AutoMagic Get Object
 		return shield;
 }
 
+/* Note : just_dropped can also be used in other cases than drop ;
+ * for example, equip() uses it.
+ */
 void just_dropped(int index)
 {
 	int i;
@@ -476,7 +486,8 @@ void just_dropped(int index)
 	if(index < 0 || index >= 10)
 		return;
 
-	free(inventory[index]); //You had forgotten this ! On an iP{ad|od|hone} w/ ~60 Mo of RAM for you, we can't permit it.
+	//free(inventory[index]); //You had forgotten this ! On an iP{ad|od|hone} w/ ~60 Mo of RAM for you, we can't permit it.
+	//no, inv[index] is supposed to have already been done.
 	for (i = index+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;

@@ -67,12 +67,12 @@ Object *spt_inv[10];
 
 typedef struct {
 	int posx, posy;
-	int gold;		// We 'enfin' use this one, lol.
+	int gold;		// We at last use this one, lol.
 	int arrows;
-	int exp_b;
-	int bow_b, sword_b; //Number of _shoots_ with bows, swords 
-	int exp_lvl;
-	int hp;
+	int exp_b;          //Number of shots in general + other factors.
+	int bow_b, sword_b; //Number of _shoots_ with bows and swords.
+	int exp_lvl;		//Experience level
+	int hp, max_hp;
 } Player;
 
 Player rodney;
@@ -112,7 +112,7 @@ Monster * get_monster(int, int);
 Monster * add_monster(Monster, int, int);
 void free_monsters(Monster *);
 void make_monsters();
-void rm_monsters(int, int);
+void rm_monster(int, int);
 void free_objects(Object *);
 void new_level();
 void clear_status();
@@ -143,6 +143,8 @@ void check_visit();
 void teleport(int);
 
 char choice(char, char, char*);
+
+void check_exp_lvl();
 
 #include "objet.h"
 

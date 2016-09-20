@@ -237,9 +237,10 @@ void man() {
 void display_state() {
 	int i;
 	if (weapon) printf("Weapon : a %s\n", weapon->name);
-	printf("Life	: %d\n", rodney.hp);
 	printf("Arrows	: %d\n", rodney.arrows);
 	printf("Gold	: %d\n", rodney.gold);
+	printf("Stats	: HP %d/%d, LVL %d (%d)\n", rodney.hp, rodney.max_hp,
+			rodney.exp_lvl, rodney.exp_b);
 	for (i = 0; i < 10; i++)
 		if (inventory[i])
 			printf("A %s.\n", inventory[i]->name);
@@ -252,15 +253,21 @@ void open_door() {
 			shop();
 		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
 			spt();
+
+//TODO: write these funcs (LATER)
 /*		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
-			castle(); //TODO: Write this func.
+			castle();
 		else												//South East
-			special();			
+			special();
  */
 	}
 }
 
-void teleport(int i) {
-	lvl_nb = i;
-	rodney.posx = rodney.posy = 2;
+void check_exp_lvl() {
+	if(rodney.exp_b >= rodney.exp_lvl * 10) {
+		rodney.exp_b = 0;
+		rodney.exp_lvl++;
+		rodney.max_hp += 4;
+		rodney.hp = rodney.hp / (rodney.max_hp-4) * rodney.max_hp;
+	}
 }

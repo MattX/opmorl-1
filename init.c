@@ -23,7 +23,7 @@ void first_init()
 	rodney.sword_b = 0;
 	rodney.bow_b = 0;
 	rodney.exp_lvl = 1;
-	rodney.hp = 10;
+	rodney.hp = rodney.max_hp = 10;
 	rodney.arrows = 0;
 
 	weapon = malloc(sizeof(Object));
