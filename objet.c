@@ -49,6 +49,7 @@ void rm_object(int posx, int posy)
 /* A little feature of this func (no bug !) is that it will follow this pattern : 123 instead of : 627 
 																				  456			   513
 																				  789			   948 */
+/* WTF ? 123 - 456 - 789 *is* a regular pattern ! */
 int find_near_free_tile(int * posx, int * posy) {
 	int i, j;
 	int curx = rodney.posx;
@@ -77,6 +78,8 @@ void free_objects(Object * obj)
 	if(obj->next != NULL)
 		free_objects(obj->next);
 	free(obj);
+
+	obj = NULL;
 }
 
 Object * get_object(int posx, int posy)

@@ -15,6 +15,7 @@
 int clean_exit(int dummy)
 {
 	free_monsters(m_list);
+	free_objects(o_list);
 	exit(EXIT_SUCCESS);
 }
 
@@ -33,6 +34,9 @@ void loop()
 		case 'h': case 'j': case 'k': case 'l':
 			move_letter(c);
 			break;
+		case '>':
+			new_level();
+			break;
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin
@@ -46,8 +50,11 @@ int main()
 	first_init();
 	fill_map();
 
+	check_visit();
 
 	loop();
+
+	clean_exit(0);
 
 	return EXIT_SUCCESS;
 }

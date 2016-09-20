@@ -13,12 +13,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define FINAL_LVL 20
+#define FINAL_LVL 25
 #define DEBUG 1
+#ifndef DEBUG
+#define DEBUG 0
+#endif
 #define K 80000000
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS } Tile;
 Tile lvl_map[12][11];
+typedef enum { TS_SEEN, TS_DARK, TS_UNVISITED } Tilestat;
+Tilestat map_status[12][11];
 
 int going_up;
 int lvl_nb;
@@ -47,7 +52,7 @@ typedef struct m_type {
 	struct m_type * next;
 } Monster;
 
-Monster m_default[13];
+extern Monster m_default[14];
 Monster * m_list;
 
 typedef enum {
@@ -58,15 +63,28 @@ typedef struct obj_type {
 	Class class; 
 	char name[50];
 	int posx, posy; 
-	int attack; /* For weapons */ int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
+	int attack; /* For weapons */
+	int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
 	int freezes; /* For wands */
-	int shots_left; /* For wands */ /* When shots_left == 0 the wand is deleted */
-	int nb_arrows; /* For arrows */ /* Note on arrows : they are always generated as a single object containing 25
-									 * arrows. At this point, nb_arrows == 25. Every time a shot is made, nb_arrows
-									 * is decremented and when nb_arrows == 0 the object is deleted */
+	int shots_left; /* For wands */
+	/* When shots_left == 0 the wand is deleted */
+	int nb_arrows; /* For arrows */
+	/* Note on arrows : they are always generated as a single object containing 25
+	 * arrows. At this point, nb_arrows == 25. Every time a shot is made, nb_arrows
+	 * is decremented and when nb_arrows == 0 the object is deleted */
 	struct obj_type * next; 
 } Object;
  
+
+/* PLEASE NOTE : for ANSI C compat reasons,
+ * o_default and m_default must be decared as :
+ *     extern Object o_default[17];
+ * in opmorl.h and
+ *     Object o_default[17] = { ... };
+ * in objet.c.
+ */
+/* ALSO NOTE : STOP WITH CRAPPY VAULES, SHIT ! Unused values must be set to 0,
+ * not K, -K or any random number. Please correct this. */
 
 /* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
 Object o_default[17] = {
@@ -89,7 +107,7 @@ Object o_default[17] = {
 
 Object * o_list; 
 
-/* FONCTIONS */
+/* FUNCTIONS */
 
 void fill_map();
 void display_map();
@@ -105,5 +123,7 @@ void make_monsters();
 int min(int,int);
 int max(int,int);
 int rnd_max(int,int);
+
+void check_visit();
 
 #endif /* OPMORL_H_ */

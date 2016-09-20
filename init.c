@@ -5,7 +5,6 @@
  *      Author: zale
  */
 
-
 #include "opmorl.h"
 
 /** first_init - init vars
@@ -25,10 +24,8 @@ void first_init()
 	m_list = NULL;
 
 	going_up = 0;
-	lvl_nb = 0;
+	lvl_nb = 1;
 	turn = 0;
 
-	//Now we init monsters :
-	/*m_default =
-	{ { ""*/ /*nothing for now */
+	clear_status();
 }

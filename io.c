@@ -23,6 +23,16 @@ void display_map()
 				continue;
 			}
 
+			if(map_status[i][j] == TS_UNVISITED) {
+				putchar(' ');
+				continue;
+			}
+
+			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
+				putchar(get_monster(i, j)->name[0]);
+				continue;
+			}
+
 			switch(lvl_map[i][j]) {
 			case T_FLOOR:
 				putchar('.');

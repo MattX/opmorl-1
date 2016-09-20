@@ -16,7 +16,32 @@ void big_gen();
  * We also might want to add a third kind of map for the last level
  * (amulet level).
  */
-//TODO: decide whether the idea is ok.
+
+void clear_status()
+{
+	int i, j;
+
+	for(i = 0; i < 12; i++)
+		for(j = 0; j < 11; j++)
+			map_status[i][j] = TS_UNVISITED;
+}
+
+void new_level()
+{
+	if(!DEBUG)
+		if(lvl_map[rodney.posx][rodney.posx] != T_STAIRS)
+			return;
+
+	free_monsters(m_list);
+	free_objects(o_list);
+
+	lvl_nb++;
+
+	clear_status();
+	fill_map();
+
+	check_visit();
+}
 
 void fill_map()
 {
@@ -102,13 +127,5 @@ void corridor_gen()
 	// Move rodney to somewhere in 1st room
 	rodney.posx = rnd_max(1,room1);
 	rodney.posy = rnd_max(1,9);
-
-}
-
-/* Topo : (a) we choose a nb of monsters to generate
- *        (b) we look at the ?
- */
-void make_monster()
-{
 
 }

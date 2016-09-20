@@ -7,6 +7,24 @@
 
 #include "opmorl.h"
 
+Monster m_default[14] =
+	/*      x  y  name         att fr bm iv aw pr  hp  next */
+		{ { 0, 0, "Elf",       10, 0, 1, 0, 0, 10, 30, NULL },
+		  { 0, 0, "Demon",     15, 0, 0, 0, 0, 4,  7,  NULL },
+		  { 0, 0, "Ice golem", 10, 1, 0, 0, 0, 9,  25, NULL },
+		  { 0, 0, "Ghost",     3,  0, 1, 1, 0, 9,  7,  NULL },
+		  { 0, 0, "Bug",       1,  0, 0, 0, 0, 1,  1,  NULL },
+		  { 0, 0, "Orc",       10, 0, 0, 0, 0, 5,  15, NULL },
+		  { 0, 0, "Troll",     7,  0, 0, 0, 0, 3,  5,  NULL },
+		  { 0, 0, "Black Dragon",30,1,0, 0, 0, 20, 50, NULL },
+		  { 0, 0, "White Dragon",35,1,1, 0, 0, 99, 60, NULL },
+		  { 0, 0, "Grue",      20, 0, 1, 0, 0, 10, 15, NULL },
+		  { 0, 0, "Rat",       5,  0, 0, 0, 0, 1,  5,  NULL },
+		  { 0, 0, "U-golem",   5,  0, 0, 0, 0, 1,  5,  NULL },
+		  { 0, 0, "Ware-wolf", 6,  0, 0, 0, 0, 3,  8,  NULL },
+		  { 0, 0, "Kobold",    5,  0, 0, 0, 0, 2,  10, NULL }
+		};
+
 /* The 5 following functions are known to work correctly */
 
 Monster * add_monster(Monster mon, int posx, int posy)
@@ -27,6 +45,7 @@ Monster * add_monster(Monster mon, int posx, int posy)
 
 	while(current->next != NULL)
 		current = current->next;
+
 	return current->next = new;
 }
 
@@ -62,6 +81,8 @@ Monster * get_monster(int posx, int posy)
 /* NOTE : it's not an error to call rm_monster on an unexisting
  * function. TTTHEBEST : did you mean an unexisting position ?
  * ZALE : No, i meant position containing no monster. TTTHEBEST : It's what I meant, how do you want to "call on an unexisting function" ?
+ * TTTHEBEST : Yeah, lapsus.
+ * PLEASE NOTE : this conversation will be deleted on next update.
  */
 void rm_monster(int posx, int posy)
 {
@@ -92,6 +113,8 @@ void free_monsters(Monster * mon)
 	if(mon->next != NULL)
 		free_monsters(mon->next);
 	free(mon);
+
+	mon = NULL;
 }
 
 void fight(Monster * mon)
@@ -100,6 +123,26 @@ void fight(Monster * mon)
 	mon->awake = 1; /* Wake up monster */
 }
 
+/** DIRTY CODE */
+
 void make_monsters()
 {
+	int nb_gen = rnd_max(2, 10);
+	int posx, posy;
+	int ri;
+
+
+	while(nb_gen--) {
+		do {
+			ri = rnd_max(0, 13);
+		} while (m_default[ri].proba > lvl_nb);
+
+		do {
+			posx = rnd_max(0, 11);
+			posy = rnd_max(0, 10);
+		} while(get_monster(posx, posy) != NULL ||
+				lvl_map[posx][posy] == T_WALL || lvl_map[posx][posy] == T_NONE ||
+				(rodney.posx == posx && rodney.posy == posy));
+		add_monster(m_default[ri], posx, posy);
+	}
 }
