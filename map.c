@@ -23,11 +23,14 @@ void fill_map()
 	if(rnd_max(0,1) == 1) big_gen();
 	else corridor_gen();
 
-	//make_monsters();
+	make_monsters();
 	//make_objects();
 }
 
 /* This code is trivial, no comment. */
+/* NOTE : Here we do _not_ reset Rodney's position. It's not
+ * a bug, it's a feature.
+ */
 void big_gen()
 {
 	int i, j;
@@ -67,17 +70,17 @@ void corridor_gen()
 	door2 = rnd_max(1,10);
 
 	//OK, let's go
-	//(c) 1° Draw the upper & lower walls
+	//(c) 1- Draw the upper & lower walls
 	for(i = 0; i < 11; i++)
 		lvl_map[0][i] = lvl_map[11][i] = T_WALL;
-	//    2° Draw the border walls
+	//    2- Draw the border walls
 	for(i = 0; i < 12; i++) {
 		if(i > room1 && i < 11-room2) continue;
 		for(j = 0; j < 11; j++)
 			lvl_map[i][j] = T_WALL;
 	}
 
-	//    3° fill the rooms
+	//    3- fill the rooms
 	for(i = 1; i < 10; i++) {
 		for(j = 1; j < room1; j++)
 			lvl_map[j][i] = T_FLOOR;
@@ -94,11 +97,13 @@ void corridor_gen()
 	}
 
 	// Generate stairs in 2nd room
-	lvl_map[rnd_max(room2+1,10)][rnd_max(1,9)] = T_STAIRS;
+	lvl_map[rnd_max(room2+2,10)][rnd_max(1,9)] = T_STAIRS;
 
 	// Move rodney to somewhere in 1st room
-	rodney.posx = rnd_max(1,9);
-	rodney.posy = rnd_max(1,room1);
+	rodney.posx = rnd_max(1,room1);
+	rodney.posy = rnd_max(1,9);
+
+	printf("Debug : room1 %d room2 %d rodney posx %d posy %d\n", room1, room2, rodney.posx, rodney.posy);
 }
 
 /* Topo : (a) we choose a nb of monsters to generate

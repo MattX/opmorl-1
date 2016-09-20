@@ -1,12 +1,11 @@
 /*
  * monster.c
  *
- *  Created on: 3 déc. 2009
+ *  Created on: 3 dec. 2009
  *      Author: Matthieu
  */
 
 #include "opmorl.h"
-#include <string.h>
 
 /* The 5 following functions are known to work correctly */
 
@@ -98,4 +97,8 @@ void fight(Monster * mon)
 {
 	mon->hp -= 5;
 	mon->awake = 1; /* Wake up monster */
+}
+
+void make_monsters()
+{
 }

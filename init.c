@@ -26,4 +26,8 @@ void first_init()
 	going_up = 0;
 	lvl_nb = 0;
 	turn = 0;
+
+	//Now we init monsters :
+	/*m_default =
+	{ { ""*/
 }

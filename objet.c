@@ -34,14 +34,14 @@ int isSomething(int posx, int posy) {
 
 void rm_object(int posx, int posy)
 {
-	Object * current = m_list;
+	Object * current = obj_list;
 	Object * tmp;
 
 	if(current == NULL) return;
 
 	if(current->posx == posx && current->posy == posy) {
 		free(current);
-		m_list = current->next;
+		obj_list = current->next;
 	}
 	while(current->next != NULL) {
 		if(current->next->posx == posx && current->next->posy == posy) {
@@ -99,6 +99,8 @@ int find_near_free_tile(int * posx, int * posy) {
 		return 1;
 	return 0;
 }
+
+/* Sauf que isMonster == get_monster et isObject == get_object */
 
 int isObject(int posx, int posy) {
 	//TODO
