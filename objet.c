@@ -27,9 +27,9 @@ Object o_default[17] = {
 /* 10*/	{C_BOW,	    "Simple Bow",			-1, -1,  5,	0,	0,	K,	350,NULL},
 /* 11*/	{C_BOW,	    "Coumpound Bow",		-1, -1, 10,	0,	0,	K,	650,NULL}, /* I do love bows */
 /* 12*/	{C_ARROW,   "Pack of 10 Arrows",	-1, -1,  0,	0,	0,	0,	100,NULL}, /* Arrows increment from 10 the "arrows" variable from Rodney.*/
-/* 13*/	{C_ARMOR_S, "Shield",				-1, -1,  3,	0,	0,	K,	75,	NULL},
-/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  3,	0,	0,	K,	200,NULL},
-/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,	 5,	0,	0,	K,	750,NULL},
+/* 13*/	{C_ARMOR_S, "Shield",				-1, -1,  0,	0,	0,	K,	75,	NULL},
+/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  0,	0,	0,	K,	200,NULL},
+/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,  0,	0,	0,	K,	750,NULL},
 /* 16*/ {C_GOLD,	"Some pieces of gold",	-1, -1,	 0,	0,	0,	0,	0,	NULL}}; /* DONE \o/ */ 
 
 Object * add_object(Object obj, int posx, int posy)
@@ -206,8 +206,6 @@ Object * get_object(int posx, int posy)
 
 void getObject() {
 	int i = -1;
-	turn_spent = 1;
-
 	Object *tmp = get_object(rodney.posx, rodney.posy);
 	if (!tmp) return;
 	if (tmp->class == C_GOLD) {
@@ -299,7 +297,7 @@ void make_objects()
 	while(nb_gen--) {
 		ri = rnd_max(0, 16);
 
-		//printf("Selected object %d for creation, name %s.\n", ri, o_default[ri].name);
+		printf("Selected object %d for creation, name %s.\n", ri, o_default[ri].name);
 		do {
 			posx = rnd_max(0, 10);
 			posy = rnd_max(0, 21);
@@ -336,7 +334,7 @@ void zap(int x, int y, int index)	/* the index of the wand in the inventory */
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
-		printf("The monster lost %d HP", -(inventory[index]->target_hp));
+		printf("The monster lost %d HP", inventory[index]->target_hp);
 	}
 	if (mon->hp < 1) {
 		printf(" and died.\n");
@@ -348,8 +346,6 @@ void zap(int x, int y, int index)	/* the index of the wand in the inventory */
 
 void zap_display() {
 	int i, is, wand, x, y;
-	turn_spent = 1;
-
 	for (i = 0; i < 10; i++)
 		if (inventory[i])
 			if (inventory[i]->class == C_WAND) {
@@ -364,7 +360,7 @@ void zap_display() {
 			printf("This is not a wand.\n");
 			return;
 		}
-		printf("Which coordonnates to zap ?\n");
+		printf("Which coordonates to zap ?\n");
 		scanf("%d%d", &x, &y);
 		zap(x, y, wand); //The zap func should check whether the coordonates are valid.
 	}
@@ -394,8 +390,6 @@ void equip_display() {
 
 void bow_display() {
 	int x, y;
-	turn_spent = 1;
-
 	if (!weapon){
 		printf("You don't have a weapon.\n");
 		return;
@@ -422,8 +416,6 @@ void bow_display() {
 
 void drink() {
 	int i, is = 0, potion;
-	turn_spent = 1;
-
 	for (i = 0; i < 10; i++)
 		if (inventory[i])
 			if (inventory[i]->class == C_POTION) {
@@ -452,11 +444,15 @@ void drink() {
 	for (i = potion+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;
+	//TODO: add fucking chk_dead()
+	if (rodney.hp < 1) {
+		printf("You die, poisoned by a potion.");
+		clean_exit(0);
+	}
 
-	chk_dead("a poisonous potion");
 }
 
-//TODO: (TO DISCUSS) replace all tests on object index by this function.
+//TODO: replace all tests on object index by this function.
 Object * amgo(int index) // AutoMagic Get Object
 {
 	if(index < 0 || index > 12)
@@ -482,7 +478,7 @@ void just_dropped(int index)
 		return;
 
 	//free(inventory[index]); //You had forgotten this ! On an iP{ad|od|hone} w/ ~60 Mo of RAM for you, we can't permit it.
-	//no, free(inv[index]) is supposed to have already been done.
+	//no, inv[index] is supposed to have already been done.
 	for (i = index+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;

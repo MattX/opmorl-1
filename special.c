@@ -227,7 +227,8 @@ int take_gold(int amount)
 	}
 }
 
-//WARNING: completely untested. //TT : fails, doesn't do anything.
+
+//WARNING: completely untested.
 void school()
 {
 	char ret;
@@ -249,9 +250,8 @@ void school()
 		printf("c. A fencing training (sword bonus + 2) : 75 gold\n");			/*3*/
 		printf("d. An archery training (bow bonus + 2) : 75 gold\n");			/*4*/
 		printf("e. Leave the school\n");										/*5*/
-		ret = getchar();
-		getchar();
-		
+		scanf("%c", &ret);
+
 		switch(ret) {
 		case 'a':
 			if(take_gold(50))
@@ -272,20 +272,5 @@ void school()
 		default:
 			return;
 		}
-	} while(ret-'a' != 5); //This is a stupid condition actually //Fixed
-}
-
-void special() {
-	if (lvl_nb == 7)
-		school();
-//	if (lvl_nb == 14)
-	//	arena();
-//	if (lvl_nb == 21)
-	//	silicon();
-}
-
-
-void castle() {
-	printf("You see \"White House\" printed on the door and, intrigued, try to open it. But it is barricaded and, despite your"
-		   "numerous efforts, it won't open.\n");
+	} while(ret != 5); //This is a stupid condition actually
 }

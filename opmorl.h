@@ -28,7 +28,6 @@
 #ifndef DEBUG
 #define DEBUG 0
 #endif
-#define REVISION "R11"
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS, T_DOOR } Tile;
 Tile lvl_map[12][22];
@@ -37,7 +36,6 @@ Tilestat map_status[12][22];
 
 int lvl_nb;
 int turn;
-int seed;
 
 typedef enum {
 	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S, C_GOLD
@@ -51,7 +49,7 @@ typedef struct obj_type {
 	Class class; 
 	char name[50];
 	int posx, posy; 
-	int attack; /* For weapons & also shields/armor */
+	int attack; /* For weapons */
 	int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
 	int freezes; /* For wands */
 	int shots_left; /* For wands */
@@ -94,13 +92,11 @@ typedef struct m_type {
 
 extern Monster m_default[14];
 Monster * m_list;
-Monster yendor;
+ 
 
 extern Object o_default[17];
 
 Object * o_list; 
-
-int turn_spent; /* this var is to be set if a turn is spent. */
 
 /* FUNCTIONS */
 
@@ -127,7 +123,6 @@ void show_objects();
 int  m_fight(); //Both fights return 1 if target killed.
 int  p_fight(int, int); //Value return of 2 means there wasn't a monster. 
 						//It should however never happen.
-void m_move();
 void make_town(); //6 following funcs are defined in special.c, they shalt refer to towns.
 void open_door(); 
 void shop();
@@ -150,10 +145,7 @@ void check_visit();
 char choice(char, char, char*);
 
 void check_exp_lvl();
-void chk_dead(char*);
 int take_gold(int);
-
-void mon_move(int, int);
 
 #include "objet.h"
 
