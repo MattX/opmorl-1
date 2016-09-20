@@ -20,19 +20,19 @@ void move_letter(char c)
 {
 	switch(c) {
 	case 'h': // move <-
-		if(rodney.posy < 1) return;
+		if(val_pos(rodney.posx, rodney.posy-1) == 0) return;
 		rodney.posy--;
 		break;
 	case 'j': // move v
-		if(rodney.posx > 10) return;
+		if(val_pos(rodney.posx+1, rodney.posy) == 0) return;
 		rodney.posx++;
 		break;
 	case 'k': // move ^
-		if(rodney.posx < 1) return;
+		if(val_pos(rodney.posx-1, rodney.posy) == 0) return;
 		rodney.posx--;
 		break;
 	case 'l': // move ->
-		if(rodney.posy > 9) return;
+		if(val_pos(rodney.posx, rodney.posy+1) == 0) return;
 		rodney.posy++;
 		break;
 	}
