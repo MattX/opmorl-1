@@ -9,21 +9,21 @@
 #include "opmorl.h"
 
 Monster m_default[14] =
-	/*      x  y  name         att fr bm iv aw pr  hp  next */
-		{ { 0, 0, "Elf",       10, 0, 1, 0, 0, 10, 30, NULL },
-		  { 0, 0, "Demon",     15, 0, 0, 0, 0, 4,  7,  NULL },
-		  { 0, 0, "Ice golem", 10, 1, 0, 0, 0, 9,  25, NULL },
-		  { 0, 0, "Ghost",     3,  0, 1, 1, 0, 9,  7,  NULL },
-		  { 0, 0, "Bug",       1,  0, 0, 0, 0, 1,  1,  NULL },
-		  { 0, 0, "Orc",       10, 0, 0, 0, 0, 5,  15, NULL },
-		  { 0, 0, "Troll",     7,  0, 0, 0, 0, 3,  5,  NULL },
-		  { 0, 0, "Black Dragon",30,1,0, 0, 0, 20, 50, NULL },
-		  { 0, 0, "White Dragon",35,1,1, 0, 0, 99, 60, NULL },
-		  { 0, 0, "Grue",      20, 0, 1, 0, 0, 10, 15, NULL },
-		  { 0, 0, "Rat",       5,  0, 0, 0, 0, 1,  5,  NULL },
-		  { 0, 0, "U-golem",   5,  0, 0, 0, 0, 1,  5,  NULL },
-		  { 0, 0, "Werewolf" , 6,  0, 0, 0, 0, 3,  8,  NULL },
-		  { 0, 0, "Kobold",    5,  0, 0, 0, 0, 2,  10, NULL }
+	/*      x  y  name         att fr bm iv aw min max hp  next  org */
+		{ { 0, 0, "Elf",       10, 0, 1, 0, 0, 12, 25, 30, NULL, 0 },
+		  { 0, 0, "Demon",     15, 0, 0, 0, 0, 4,  15, 7,  NULL, 1 },
+		  { 0, 0, "Ice golem", 10, 1, 0, 0, 0, 9,  20, 25, NULL, 2 },
+		  { 0, 0, "Ghost",     3,  0, 1, 1, 0, 9,  18, 7,  NULL, 3 },
+		  { 0, 0, "Bug",       1,  0, 0, 0, 0, 1,  3,  1,  NULL, 4 },
+		  { 0, 0, "Orc",       10, 0, 0, 0, 0, 5,  15, 15, NULL, 5 },
+		  { 0, 0, "Troll",     7,  0, 0, 0, 0, 3,  13, 5,  NULL, 6 },
+		  { 0, 0, "Black Dragon",30,1,0, 0, 0, 18, 25, 50, NULL, 7 },
+		  { 0, 0, "White Dragon",35,1,1, 0, 0, 21, 25, 60, NULL, 8 },
+		  { 0, 0, "Grue",      20, 0, 1, 1, 0, 10, 25, 15, NULL, 9 },
+		  { 0, 0, "Rat",       5,  0, 0, 0, 0, 1,  5,  5,  NULL, 10 },
+		  { 0, 0, "U-golem",   3,  0, 0, 0, 0, 1,  5,  8,  NULL, 11 },
+		  { 0, 0, "Werewolf" , 6,  0, 0, 0, 0, 3,  14, 8,  NULL, 12 },
+		  { 0, 0, "Kobold",    5,  0, 0, 0, 0, 2,  12, 10, NULL, 13 }
 		};
 
 /* The 5 following functions are known to work correctly */
@@ -126,7 +126,12 @@ void m_move()
 			current = current->next;
 			continue;
 		}
-		mon_move(current->posx, current->posy);
+		if(current->orig == 1000) {
+			y_ai();
+			current = current->next;
+			continue;
+		}
+		mon_move(current->posx, current->posy, 1);
 		current = current->next;
 	}
 }
@@ -213,9 +218,36 @@ void add_rat()
 }
 #endif
 
-/** DIRTY CODE */
-/* TODO: rewrite this part*/
 
+int count_valid_monsters()
+{
+	int i;
+	int sum = 0;
+
+	for(i = 0; i < 14; i++)
+		if(m_default[i].lmin <= lvl_nb && m_default[i].lmax >= lvl_nb) sum++;
+
+	return sum;
+}
+
+int val_monster_at(int index)
+{
+	int i;
+
+	for(i = 0; i < 14; i++) {
+		if(m_default[i].lmin <= lvl_nb && m_default[i].lmax >= lvl_nb)
+			index--;
+		if(index == 0)
+			return i;
+	}
+
+	fprintf(stderr, "valmonat error\n");
+	return 0;
+}
+
+//TODO: continue fixing
+
+/** DIRTY CODE */
 void make_monsters()
 {
 	int nb_gen = rnd_max(2, 10);
@@ -224,9 +256,7 @@ void make_monsters()
 
 
 	while(nb_gen--) {
-		do {
-			ri = rnd_max(0, 13);
-		} while (m_default[ri].proba > lvl_nb);
+		ri = rnd_max(0, count_valid_monsters());
 
 		do {
 			posx = rnd_max(0, 10);
@@ -235,6 +265,19 @@ void make_monsters()
 				lvl_map[posx][posy] == T_WALL ||
 				lvl_map[posx][posy] == T_NONE ||
 				(rodney.posx == posx && rodney.posy == posy));
-		add_monster(m_default[ri], posx, posy);
+		add_monster(m_default[val_monster_at(ri)], posx, posy);
 	}
+}
+
+Monster * find_yendor()
+{
+	Monster * current = m_list;
+
+	while(current != NULL) {
+		if(current->orig == 1000)
+			return current;
+		current = current->next;
+	}
+
+	return NULL;
 }

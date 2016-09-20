@@ -16,7 +16,7 @@ char town_welcome[] =
 
 /* This file contains functions for :
  * (a) towns (lvls 7, 14 & 21)
- * (b) the last level & win (lvl 25) //TODO: This
+ * (b) the last level & win (lvl 25)
  * (d) (maybe) (later) quests //We've got lots to do before quests. RLY.
  */
 
@@ -272,12 +272,14 @@ void school()
 		default:
 			return;
 		}
-	} while(ret-'a' != 5); //This is a stupid condition actually //Fixed
+	} while(ret-'a' != 5); //This is a stupid condition actually //Fixed //Still
 }
 
 void special() {
-	if (lvl_nb == 7)
+	if (lvl_nb == 7) {
+		getchar(); //Hack (this is NOT a kluge)
 		school();
+	}
 //	if (lvl_nb == 14)
 	//	arena();
 //	if (lvl_nb == 21)
@@ -288,4 +290,19 @@ void special() {
 void castle() {
 	printf("You see \"White House\" printed on the door and, intrigued, try to open it. But it is barricaded and, despite your"
 		   "numerous efforts, it won't open.\n");
+}
+
+
+//TODO: finish this
+void make_final() {
+	int i, j;
+
+	//Clear everything
+	for(i = 0; i < 12; i++)
+		for(j = 0; j < 22; j++)
+			lvl_map[i][j] = T_FLOOR;
+
+	add_monster(yendor, 1, 1);
+	rodney.posx = 10;
+	rodney.posy = 15;
 }

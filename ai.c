@@ -7,6 +7,8 @@
 
 #include "opmorl.h"
 
+/* REGULAR MONSTER AI */
+
 //Yes, i know the following is dirty.
 static int was_mod = 0;
 static int lvl_stat[12][22];
@@ -35,16 +37,20 @@ void replace(int x, int y, int clvl)
 	was_mod = 1;
 }
 
-void find_min(int x, int y) {
+
+/** @param p if p == -1 find_min will become find_max
+ * otherwise p should be set to 1.
+ */
+void find_min(int x, int y, int p) {
 	Monster * mon = get_monster(x, y);
 
-	if(is_rod_valid(x - 1, y) && lvl_stat[x - 1][y] < lvl_stat[x][y])
+	if(is_rod_valid(x - 1, y) && p*lvl_stat[x - 1][y] < p*lvl_stat[x][y])
 		mon->posx--;
-	else if(is_rod_valid(x + 1, y) && lvl_stat[x + 1][y] < lvl_stat[x][y])
+	else if(is_rod_valid(x + 1, y) && p*lvl_stat[x + 1][y] < p*lvl_stat[x][y])
 		mon->posx++;
-	else if(is_rod_valid(x, y - 1) && lvl_stat[x][y - 1] < lvl_stat[x][y])
+	else if(is_rod_valid(x, y - 1) && p*lvl_stat[x][y - 1] < p*lvl_stat[x][y])
 		mon->posy--;
-	else if(is_rod_valid(x, y + 1) && lvl_stat[x][y + 1] < lvl_stat[x][y])
+	else if(is_rod_valid(x, y + 1) && p*lvl_stat[x][y + 1] < p*lvl_stat[x][y])
 		mon->posy++;
 }
 
@@ -68,7 +74,9 @@ void show_stat()
 	fprintf(stderr, "------- EOT -------\n");
 }
 
-void mon_move(int x, int y)
+
+/** @param p see find_min */
+void mon_move(int x, int y, int p)
 {
 	int cur_lvl = 0;
 	int i, j;
@@ -90,7 +98,7 @@ void mon_move(int x, int y)
 					replace(i, j-1, cur_lvl);
 				}
 		if(!was_mod) { //Can't access cell. May happen if monsters everywhere.
-			printf("AI debug : monster @ %d, %d : can't move.\n", x, y);
+			fprintf(stderr, "AI debug : monster @ %d, %d : can't move.\n", x, y);
 			return;
 		}
 		was_mod = 0;
@@ -98,5 +106,46 @@ void mon_move(int x, int y)
 #ifdef DEBUG
 	show_stat();
 #endif
-	find_min(x, y);
+	find_min(x, y, 1);
+}
+
+/* YENDOR AI */
+/* So, yendor wants to use his wands first. He won't do this if :
+ * (a) he would shoot a monster, or
+ * (b) he has no shots left, or
+ * (c) he cannot shoot.
+ */
+
+void y_ai()
+{
+	int rod;
+	fprintf(stderr, "Yendor is thinking !\n");
+
+	fmonat(yendor.posx, yendor.posy, rodney.posx, rodney.posy, &rod);
+	if(yendor.hp <= rodney.exp_lvl/2 + weapon->attack &&
+			yendor_potions_healing) {
+		//Rodney could kill us ! quick, a potion of healing !
+		fprintf(stderr, "Yendor drank !\n");
+		yendor.hp += 35;
+		yendor_potions_healing--;
+		return;
+	}
+	else if(abs(yendor.posx-rodney.posx)+abs(yendor.posy-rodney.posy) < 3 &&
+			yendor_wands_wounds) {
+		//RODNEY IS NEAR. FLEE !
+		fprintf(stderr, "Yendor flees !\n");
+		mon_move(yendor.posx, yendor.posy, -1);
+		return;
+	}
+	else if(rod) {
+		// If we shoot at rodney
+		fprintf(stderr, "Yendor shoots !\n");
+		rodney.hp -= 30 + (armor?armor->attack:0);
+		chk_dead("the mighty wizard of Yendor");
+		yendor_wands_wounds--;
+		return;
+	}
+	else //We approach rodney
+		mon_move(yendor.posx, yendor.posy, 1);
+	fprintf(stderr, "Yendor approaches !\n");
 }

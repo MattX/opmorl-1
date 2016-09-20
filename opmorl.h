@@ -20,12 +20,18 @@
 #include <ctype.h>
 
 
-#define FINAL_LVL 25
 #define WEAPON_SLOT 10
 #define ARMOR_SLOT 11
 #define SHIELD_SLOT 12
 #define DEBUG
+//#define HARDCORE_DBG
 #define REVISION "R11"
+
+#ifndef HARDCORE_DBG
+#define FINAL_LVL 25
+#else
+#define FINAL_LVL 1 //THIS IS FUCKING TEMP.
+#endif
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS, T_DOOR } Tile;
 Tile lvl_map[12][22];
@@ -84,15 +90,23 @@ typedef struct m_type {
 	int freezes, blocks_magic;
 	int is_invisible;
 	int awake;
-	int proba;
+	int lmin, lmax;
 	int hp;
 
 	struct m_type * next;
+
+
+	int orig; //The original index in array. Yendor = 1000
 } Monster;
 
 extern Monster m_default[14];
 Monster * m_list;
-Monster yendor;
+
+//in init.c {
+extern Monster yendor;
+extern int yendor_wands_wounds;
+extern int yendor_potions_healing;
+// }
 
 extern Object o_default[17];
 
@@ -134,6 +148,10 @@ void spt();
 void castle();
 void special();
 
+void make_final();
+
+void y_ai();
+
 void man();
 
 int clean_exit(int);
@@ -152,9 +170,11 @@ void chk_dead(char*);
 int take_gold(int);
 void swap(int*, int*);
 
-void mon_move(int, int);
+void mon_move(int, int, int);
 Monster * fmonat(int, int, int, int, int*);
 void add_rat();
+Monster * find_yendor();
+void win();
 
 void save();
 

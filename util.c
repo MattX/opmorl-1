@@ -43,14 +43,15 @@ void swap(int * a, int * b)
 	*b = tmp;
 }
 
+void win()
+{
+	printf("You hear a hollow voice :\n");
+	printf("\"Mortal, you have defeated the infamous wizard of Yendor. As a");
+	printf(" proof of my gratitude, I will grant you immortality !\"\n");
+	printf("You are now immortal.\n\n");
 
-//NOW WTF IS THIS ?
-char choice(char c, char d, char * msg) {
-	char e = '\0';
-	while (e != c && e != d) {
-		printf("%s\n", msg);
-		e = getchar();
-		getchar(); //for the '\n'
-	}
-	return e;
+	printf("You have won.\n");
+	printf("Congratulations ! You have defeated the WoY at experience level"
+			" %d, with %d gold after %d turns.\n", rodney.exp_lvl, rodney.gold, turn);
+	clean_exit(0);
 }

@@ -17,12 +17,16 @@
 
 void sing_fight(Monster * mon)
 {
+	int att;
+
 	if(mon == NULL) return;
-/*total att = monster attack - defense : shield          - defense : armor. */
-	rodney.hp -= mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0);
+/*total att=monster attack-defense:shield         - defense : armor. */
+	att = mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0);
+	att = att<0?0:att;
+	rodney.hp -= att;
 
 	printf("The monster @ %d, %d hit you for %d damage.\n", mon->posx, mon->posy,
-		   mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0)); 
+		   att);
 	chk_dead("a monster");
 }
 

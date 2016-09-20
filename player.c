@@ -258,7 +258,7 @@ void open_door() { //This function fails, the two southern doors acceed the scho
 		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
 			spt();
 
-		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
+		else if (rodney.posx == 7 && rodney.posy == 5)		//South West
 			castle();
 		else												//South East
 			special();

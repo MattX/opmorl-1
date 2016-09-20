@@ -46,8 +46,11 @@ void loop()
 					rodney.hp++;
 				regain_hp_in = 5;
 			}
+			chk_dead("something (this is a BUG)");
 		}
 		turn_spent = 0;
+		if(lvl_nb == FINAL_LVL && !find_yendor())
+			win();
 
 		c = getchar();
 		switch(c) {

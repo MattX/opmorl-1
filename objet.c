@@ -28,8 +28,8 @@ Object o_default[17] = {
 /* 11*/	{C_BOW,	    "Coumpound Bow",		-1, -1, 10,	0,	0,	K,	650,NULL}, /* I do love bows */
 /* 12*/	{C_ARROW,   "Pack of 10 Arrows",	-1, -1,  0,	0,	0,	0,	100,NULL}, /* Arrows increment from 10 the "arrows" variable from Rodney.*/
 /* 13*/	{C_ARMOR_S, "Shield",				-1, -1,  3,	0,	0,	K,	75,	NULL},
-/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  3,	0,	0,	K,	200,NULL},
-/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,	 5,	0,	0,	K,	750,NULL},
+/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  7,	0,	0,	K,	200,NULL},
+/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,	12,	0,	0,	K,	750,NULL},
 /* 16*/ {C_GOLD,	"Some pieces of gold",	-1, -1,	 0,	0,	0,	0,	0,	NULL}}; /* DONE \o/ */ 
 
 Object * add_object(Object obj, int posx, int posy)
@@ -219,6 +219,7 @@ void getObject() {
 	if (tmp->class == C_ARROW) {
 		rodney.arrows += 10;
 		rm_object(rodney.posx, rodney.posy);
+		return;
 	}
 	while(inventory[++i] != NULL);
 	if(i >= 10) {
@@ -312,8 +313,6 @@ void make_objects()
 
 /** DIRTY CODE ENDS HERE, FOR GOD'S SAKE */
 
-/* BOW() IS OBSELETE */
-//TODO: re-split.
 void bow (int x, int y) {
 	Monster * mon;
 	int rod;
@@ -331,16 +330,16 @@ void bow (int x, int y) {
 	}
 }
 
+//TODO: test new zap() (it now uses fmonat).
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
 {
-	/*
-	 * The code in here should be *very* complicated. Not just like 15 lines.
-	 * NOTE : the above comment is only for future versions of the code.
-	 */
 	if (x < 0 || x >= 12 ||
 		y < 0 || y >= 22) 
 		return;
-	Monster *mon = get_monster(x, y);
+
+	int rod;
+	Monster *mon = fmonat(rodney.posx, rodney.posy, x, y, &rod);
+
 	if (mon == NULL) return;
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
@@ -366,8 +365,8 @@ void zap_display() {
 				is++;
 			}
 	if (is) {
-		printf("Which wand to use ? ");
-		scanf("%d", &wand);
+		printf("Which wand to use ? (type 20 to abort) ");
+		scanf("%d", &wand); //TODO: There is a bug here if we enter a letter
 		if (!inventory[wand]) return;
 		if (inventory[wand]->class != C_WAND)  {
 			printf("This is not a wand.\n");
@@ -465,7 +464,7 @@ void drink() {
 	chk_dead("a poisonous potion");
 }
 
-//TODO: (TO DISCUSS) replace all tests on object index by this function.
+
 Object * amgo(int index) // AutoMagic Get Object
 {
 	if(index < 0 || index > 12)
@@ -491,7 +490,7 @@ void just_dropped(int index)
 		return;
 
 	//free(inventory[index]); //You had forgotten this ! On an iP{ad|od|hone} w/ ~60 Mo of RAM for you, we can't permit it.
-	//no, free(inv[index]) is supposed to have already been done.
+	//no, free(inv[index]) is supposed to have already been done, moreover look @ the note above.
 	for (i = index+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;

@@ -8,6 +8,11 @@
 
 #include "opmorl.h"
 
+Monster yendor =
+	{ 0, 0, "The mighty Wizard of Yendor", 40, 1, 0, 0, 1, 25, 200, NULL, 1000 };
+int yendor_wands_wounds = 0;
+int yendor_potions_healing = 5;
+
 /* first_init - init vars
  *
  */

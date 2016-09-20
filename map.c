@@ -23,13 +23,14 @@ void clear_status()
 
 void new_level()
 {
-#ifdef DEBUG
-	if(lvl_map[rodney.posx][rodney.posx] != T_STAIRS)
+#ifndef DEBUG
+	if(lvl_map[rodney.posx][rodney.posy] != T_STAIRS)
 		return;
 #endif
 
-	free_monsters(m_list);
-	free_objects(o_list);
+// the following is done by fill_map()
+//	free_monsters(m_list);
+//	free_objects(o_list);
 
 	lvl_nb++;
 
@@ -48,17 +49,20 @@ void new_level()
 
 void fill_map()
 {
+	free_monsters(m_list);
+	make_monsters();
+
 	if(lvl_nb % 7 == 0) {
 		make_town();
-		free_monsters(m_list);
-		free_objects(o_list);
 		return; //There are no objects/monsters in a town.
+	}
+	else if(lvl_nb == FINAL_LVL) {
+		make_final();
+		return;
 	}
 	else if(lvl_nb > 10 && lvl_nb < 16) big_gen();
 	else corridor_gen();
 
-	free_monsters(m_list);
-	make_monsters();
 	free_objects(o_list);
 	make_objects();
 }
@@ -95,7 +99,7 @@ void corridor_gen() {
 	int u1, d1, d2; // position of the right walls of rooms up 1, down 1, down 2.
 	int dooru1, dooru2, doord1, doord2, doord3; // position of the doors of these rooms.
 	int i, j;
-	int x_stairs, y_stairs, pos; // these will be used to define the new stairs position, ROLFMAO ! OMG I'M LISTENING TO WEIRD MUSIC (the bed, berlin, lou reed)
+	int x_stairs, y_stairs, pos; // these will be used to define the new stairs position.
 	
 	//Clear everything
 	for(i = 0; i < 12; i++)
@@ -109,17 +113,15 @@ void corridor_gen() {
 	
 	//Position of walls
 	if(rooms_up == 2)
-		while (rodney.posx == (u1 = rnd_max(7, 13)));	//We want to be sure
-														//Rodney won't die 
-														//crushed by walls.
+		u1 = rnd_max(7, 13);
 	else
 		u1 = 21;
 	if(rooms_down == 2) {
-		while (rodney.posx == (d1 = rnd_max(7, 13)));		//Same
+		d1 = rnd_max(7, 13);
 		d2 = 21;
 	} else {
-		while (rodney.posx == (d1 = rnd_max(5, 7)));		//Same
-		while (rodney.posx == (d2 = rnd_max(d1+4, 13)));	//And same
+		d1 = rnd_max(5, 7);
+		d2 = rnd_max(d1+4, 13);
 	}
 	
 	//Position of stairs, cuz they rock too much not to be random
