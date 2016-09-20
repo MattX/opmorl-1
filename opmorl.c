@@ -18,6 +18,16 @@ int clean_exit(int dummy)
 	exit(EXIT_SUCCESS);
 }
 
+int min(int a, int b)
+{
+	return a<b ? a:b;
+}
+
+int max(int a, int b)
+{
+	return a>b ? a:b;
+}
+
 void loop()
 {
 	char c;
@@ -40,15 +50,11 @@ void loop()
 
 int main()
 {
-	fill_map();
-	first_init();
+	srand(time(NULL));
 
-	Monster m = { 1, 1, 0, 0, 0, 0, 0, 0, 20 };
-	add_monster(m, -1, -1);
-	m.hp = 10;
-	add_monster(m, -1, -1);
-	printf("%d %d %d - %d\n", m_list->posx, m_list->posy, m_list->hp, m_list->next->hp);
-	free_monsters(m_list);
+	first_init();
+	fill_map();
+
 
 	loop();
 

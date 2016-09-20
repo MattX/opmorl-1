@@ -8,12 +8,14 @@
 #ifndef OPMORL_H_
 #define OPMORL_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #define FINAL_LVL 20
+#define DEBUG 1
 
-#define rnd_max(a,b) ((rand() % b) + a)
+#define rnd_max(a,b) ((rand()*10 % ((b)-(a))) + (a))
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS } Tile;
 Tile lvl_map[12][11];
@@ -34,6 +36,7 @@ Player rodney;
 
 typedef struct m_type {
 	int posx, posy;
+	char name[50];
 	int attack;
 	int freezes, blocks_magic;
 	int is_invisible;
