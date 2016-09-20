@@ -250,9 +250,9 @@ void open_door() {
 	if (lvl_map[rodney.posx][rodney.posy] == T_DOOR) { 
 		if (rodney.posx == 3 && rodney.posy == 5)			//North West
 			shop();
-/*		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
+		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
 			spt();
-		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
+/*		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
 			castle(); //TODO: Write this func.
 		else												//South East
 			special();			

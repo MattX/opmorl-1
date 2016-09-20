@@ -63,6 +63,8 @@ Object *weapon;
 Object *shield;
 Object *armor;
 
+Object *spt_inv[10];
+
 typedef struct {
 	int posx, posy;
 	int gold;		// We 'enfin' use this one, lol.

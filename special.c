@@ -87,12 +87,12 @@ void sell()
 		if(object < 0 || !inventory[object] || (object == 10 && !weapon)||
 		(object == 11 && !armor) || (object == 12 && !shield)) {
 		printf("You cannot sell this.\n");
-						//} else {
+						} else {
 		obj = amgo(object);
 		rodney.gold += 0.66*(double)obj->val;
 		free(obj);
 		just_dropped(object);
-						//}
+	}
 }
 
 void buy()
@@ -136,4 +136,74 @@ void shop()
 	}
 	
 	printf("\"Bye ! Hope to see ya soon !!\", says the happy shopkeeper as you leave.\n");
+}
+
+void recover() {
+	int i, val, j = -1;
+	if (!spt_inv) {
+		printf("There is nothing in the SPT.\n");
+		return;
+	}
+	for (i = 0; spt_inv[i]; i++)
+		printf("%d. A %s\n", i, spt_inv[i]->name);
+	scanf("%d", &val);
+	if (!spt_inv[val]) {
+		printf("There is nothing here.\n");
+		return;
+	}
+	if (inventory[9]) {
+		printf("Your inventory is full.\n");
+		return;
+	}
+	while (inventory[++j]);
+	*inventory[j] = *spt_inv[val];
+	free(spt_inv[val]);
+	spt_inv[val] = NULL;
+	for (i = val+1; i < 10; i++)
+		spt_inv[i-1] = spt_inv[j]; //this should _not_ segfault
+	spt_inv[9] = NULL;
+}
+
+void give_spt() {
+	int i, val, j = -1;
+	if (!inventory) {
+		printf("There is nothing in your inventory.\n");
+		return;
+	}
+	for (i = 0; inventory[i]; i++)
+		printf("%d. A %s\n", i, inventory[i]->name);
+	scanf("%d", &val);
+	if (!inventory[val]) {
+		printf("There is nothing here.\n");
+		return;
+	}
+	if (spt_inv[9]) {
+		printf("The SPT is full.\n");
+		return;
+	}
+	while (spt_inv[++j]);
+	*spt_inv[j] = *inventory[val];
+	free(inventory[val]);
+	inventory[val] = NULL;
+	for (i = val+1; i < 10; i++)
+		inventory[i-1] = inventory[j]; //this should _not_ segfault
+	inventory[9] = NULL;
+}
+
+void spt() {
+	int retval, i = -1, j = -1;
+	printf("Welcome to the SPT station !! Here, you can leave us some objects you will recover in the next station ! How amazing !!\n");
+	while (retval) {
+		while (inventory[++i]);
+		while (spt_inv[++j]);
+		printf("There are %d objects in your inventory, %d in the SPT.\n", i, j);
+		printf("Do you want to get an object (1), give us one (2), or leave (0) ?\n");	  
+		scanf("%d", &retval);
+		if (retval == 1)
+			recover();
+		else if (retval)
+			give_spt();
+		i = j = -1;
+	}
+	printf("\"We'll take care of your stuff !\", says the SPT team as you close the door.\n");
 }
