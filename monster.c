@@ -191,22 +191,6 @@ void p_fight(int x, int y)
 		printf("You have ascended to level %d\n", rodney.exp_lvl++);
 }
 
-/* SHOULD BE IN OBJET.C. PLEASE MOVE. */
-void zap(int x, int y, int index) /* the index of the wand in the inventory */
-{
-	int i;
-	Monster *mon = get_monster(x, y);
-	if (inventory[index]->shots_left > 0) {
-		mon->hp += inventory[index]->target_hp; /* The target_hp is negative is health is removed, therefore + */
-		inventory[index]->shots_left--;
-	}
-	if (!inventory[index]->shots_left) {
-		for (i = index; i < 9; i++)
-			inventory[index] = inventory[index+1];
-		inventory[9] = NULL;
-	}
-}
-
 int m_valid(int x, int y)
 {
 	if(rodney.posx != x && rodney.posy != y && get_monster(x, y) == NULL &&

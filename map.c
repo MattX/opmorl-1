@@ -47,7 +47,7 @@ void new_level()
 void fill_map()
 {
 	if(lvl_nb % 7 == 0) {
-		make_town();
+		//make_town();
 		free_monsters(m_list);
 		free_objects(o_list);
 		return; //There are no objects/monsters in a town.

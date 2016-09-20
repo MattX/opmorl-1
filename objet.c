@@ -150,7 +150,7 @@ int drop_object(int i) {
 
 			for (j = i+1; j < 10; j++)
 				inventory[j-1] = inventory[j]; //this should _not_ segfault
-			inventory[9] = NULL; // This should be put to 0 but I dunno how, as for down.
+			inventory[9] = NULL;
 
 			return 0; // dropping succeeded
 		}
@@ -276,5 +276,31 @@ void make_objects()
 				lvl_map[posx][posy] == T_WALL || lvl_map[posx][posy] == T_NONE ||
 				(rodney.posx == posx && rodney.posy == posy));
 		add_object(o_default[ri], posx, posy);
+	}
+}
+
+void drink_popo(int index) {
+	int j;
+	rodney.hp += inventory[index]->target_hp;
+	free(inventory[index]);
+	for (j = index+1; j < 10; j++)
+		inventory[j-1] = inventory[j]; //this should _not_ segfault
+	inventory[9] = NULL;
+}
+
+/* SHOULD BE IN OBJET.C. PLEASE MOVE. */
+void zap(int x, int y, int index) /* the index of the wand in the inventory */
+{
+	int i;
+	Monster *mon = get_monster(x, y);
+	if (mon == NULL) return;
+	if (inventory[index]->shots_left > 0) {
+		mon->hp += inventory[index]->target_hp; /* The target_hp is negative is health is removed, therefore + */
+		inventory[index]->shots_left--;
+	}
+	if (!inventory[index]->shots_left) {
+		for (i = index; i < 9; i++)
+			inventory[index] = inventory[index+1];
+		inventory[9] = NULL;
 	}
 }

@@ -109,7 +109,7 @@ void show_objects();
 #endif
 void m_fight();
 void p_fight();
-void make_town();
+//void make_town();
 
 int clean_exit(int dummy);
 

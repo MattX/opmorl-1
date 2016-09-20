@@ -24,11 +24,13 @@ void free_objects(); /* free() all the list */
 int drop_object(int i);
 void drop(); /* This func, defined in player.c, displays the inventory and asks the player which object to drop. It calls then drop_object and says if whether the drop was successful */
 int find_near_free_tile(int * posx, int * posy);
-/* Trouve la case libre la plus proche de *posx, *posy (celle-ci comprise)
+/* Trouve la case libre la plus proche de *posx, *posy (celle-ci comprise)				
  *  et met ses coordonneees dans *posx, *posy */
 /* @return 0 si objet droppe, 1 sinon*/
 void wish();
 void make_objects();
+void drink_popo(int index);
+void zap(int posx, int posy, int index);
 
 
 #endif
