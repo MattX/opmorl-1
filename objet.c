@@ -8,6 +8,7 @@
  */
 
 #include "opmorl.h"
+/* ENOUGH CRAPPY VALUES ! */
 #define K 800000000
 
 
@@ -25,6 +26,7 @@ Object o_default[17] = {
 	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
 	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
 	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
+	/* Remove the following object */
 	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0}, /* Arrows increment from 25 the "arrows" variable from Rodney.*/
 	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,      0, K,  0},
 	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,      0, K,  0},
@@ -150,7 +152,8 @@ int drop_object(int i) {
 }
 		
 
-Object *get_object(int posx, int posy) {
+Object * get_object(int posx, int posy)
+{
 	Object * current = o_list;
 	
 	while(current != NULL) {

@@ -84,7 +84,6 @@ Monster * m_list;
  
 
 
-
 extern Object o_default[17];
 
 Object * o_list; 

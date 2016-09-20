@@ -2,7 +2,7 @@
  * monster.c
  *
  *  Created on: 3 dec. 2009
- *      Author: Mathieu
+ *      Author: Matthieu (SPELLING *WAS* CORRECT)
  */
 
 #include "opmorl.h"
@@ -82,6 +82,7 @@ Monster * get_monster(int posx, int posy)
  * function. TTTHEBEST : did you mean an unexisting position ?
  * ZALE : No, i meant position containing no monster. TTTHEBEST : It's what I meant, how do you want to "call on an unexisting function" ?
  * TTTHEBEST : Yeah, lapsus. //TTTHEBEST : Why the fuck did you answer w/  MY nickname OMG
+ * ZALE : Sorry, lapsus again !
  * PLEASE NOTE : this conversation will be deleted on next+1 update.
  */
 void rm_monster(int posx, int posy)
@@ -140,11 +141,15 @@ void p_fight(int x, int y)
 		mon->hp -= weapon.attack;
 		rodney.arrows--;
 	}
+/* Wands can NOT be wield as weapons, so this code is nonsense. We
+ * should create a zap() function for this. */
 	else if (weapon.class == C_WAND) {
 		weapon.shots_left--;
 		if (weapon.shots_left == 0) {
 			drop_object(WEAPON_SLOT);
 			rm_object(x, y); /* The object is dropped and immediately deleted */
+							 /* OK, but this code is wrong : you don't know _where_
+							  * it has been dropped */
 		}
 	}
 	
