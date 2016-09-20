@@ -150,7 +150,7 @@ int drop_object(int i) {
 
 			for (j = i+1; j < 10; j++)
 				inventory[j-1] = inventory[j]; //this should _not_ segfault
-			inventory[9] = NULL; // This should be put to 0 but I dunno how, as for down.
+			inventory[9] = NULL;
 
 			return EPIC_WIN; // dropping succeeded
 		}
@@ -207,7 +207,7 @@ void getObject() {
 	int i = -1;
 	while(inventory[++i] != NULL);
 	if(i >= 10) {
-		printf("Sorry, your inventory is full. You should try dropping something, or\n");
+		printf("Sorry, your inventory is full. You should try dropping something, or dying\n");
 		return;
 	}
 
@@ -285,6 +285,7 @@ void zap(int x, int y, int index) /* the index of the wand in the inventory */
 {
 	int i;
 	Monster *mon = get_monster(x, y);
+	if (mon == NULL) return;
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
@@ -294,4 +295,55 @@ void zap(int x, int y, int index) /* the index of the wand in the inventory */
 			inventory[index] = inventory[index+1];
 		inventory[9] = NULL;
 	}
+}
+
+void zap_display() {
+	int i, is, wand, x, y;
+	for (i = 0; i < 10; i++)
+		if (inventory[i]->class == C_WAND) {
+			printf("%d. %s with %d shot(s) left.", i, inventory[i]->name, inventory[i]->shots_left);
+			is++;
+		}
+	if (is) {
+		printf("Which wand to use ?");
+		scanf("%d", &wand);
+		if (inventory[wand]->class != C_WAND)  {
+			printf("This is not a wand.\n");
+			return;
+		}
+		printf("Which coordonates to zap ?\n");
+		scanf("%d%d", &x, &y);
+		zap(x, y, wand); //The zap func should check whether the coordonates are valid.
+	}
+	else
+		printf("There is no wand to use.\n");
+	return;
+	
+}
+
+void drink() {
+	int i, is = 0, potion;
+	for (i = 0; i < 10; i++)
+		if (inventory[i]->class == C_WAND) {
+			printf("%d. A %s", i, inventory[i]->name);
+			is++;
+		}
+	if (!is) {
+		printf("You don't have any potion.");
+		return;
+	}
+	else {
+		printf("Which one do you want to drink ?\n");
+		scanf("%d", &potion);
+	}
+	if (inventory[potion]->class != C_POTION) {
+		printf("This is no potion.\n");
+		return;
+	}
+	rodney.hp+= inventory[potion]->target_hp;
+	free(inventory[potion]);
+	for (i = potion+1; i < 10; i++)
+		inventory[i-1] = inventory[i];
+	inventory[9] = NULL;
+
 }

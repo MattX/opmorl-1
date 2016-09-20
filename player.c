@@ -34,7 +34,7 @@ int is_floor(int x, int y)
  * @param w_down lower wall
  * @param w_left left wall
  * @param w_right right wall
- * @note this function is a bit buggy.
+ * @note this function is a bit buggy. //In which way ?
  */
 
 void find_walls(int * w_up, int * w_down, int * w_left, int * w_right)
@@ -67,7 +67,7 @@ void check_visit()
 			if(map_status[i][j] == TS_SEEN) map_status[i][j] = TS_DARK;
 
 	//If in a corridor
-	if(lvl_map[rodney.posx][rodney.posy] == T_CORRIDOR) { // I get an EXC_BAD_ACCESS here, cuz of the brand-new code of map.c (moving rodney to the fspos) : rodney.posy =  -1761847556 & rodney.posx = 20636
+	if(lvl_map[rodney.posx][rodney.posy] == T_CORRIDOR) { 
 		for(i = rodney.posx-1; i <= rodney.posx+1; i++)
 			for(j = rodney.posy-1; j <= rodney.posy+1; j++) {
 				if(i < 0 || i > 11 || j < 0 || j > 21) continue;
@@ -103,47 +103,39 @@ void fill_visit()
 
 void move_letter(char c)
 {
-	int ret, death; //Used to check whether the monster, or Rodney, is dead and act in consequence.
+	int ret, death = 1; //Used to check whether the monster, or Rodney, is dead and act in consequence.
 
 	switch(c) {
 	case 'h': // move <-
 		ret = val_pos(rodney.posx, rodney.posy-1);
 
 		if(!ret) return;
-		if(ret == V_COMBAT) {
-			 death = fight(rodney.posx, rodney.posy-1);
-			return;
-		}
+		if(ret == V_COMBAT)
+			death = fight(rodney.posx, rodney.posy-1);
 		if (death == 1) rodney.posy--; 
 		break;
 	case 'j': // move v
 		ret = val_pos(rodney.posx+1, rodney.posy);
 
 		if(!ret) return;
-		if(ret == V_COMBAT) {
+		if(ret == V_COMBAT)
 			death = fight(rodney.posx+1, rodney.posy);
-			return;
-		}
 		if (death == 1) rodney.posx++;
 		break;
 	case 'k': // move ^
 		ret = val_pos(rodney.posx-1, rodney.posy);
 
 		if(!ret) return;
-		if(ret == V_COMBAT) {
+		if(ret == V_COMBAT)
 			death = fight(rodney.posx-1, rodney.posy);
-			return;
-		}
 		if (death == 1) rodney.posx--;
 		break;
 	case 'l': // move ->
 		ret = val_pos(rodney.posx, rodney.posy+1);
 
 		if(!ret) return;
-		if(ret == V_COMBAT) {
+		if(ret == V_COMBAT)
 			death = fight(rodney.posx, rodney.posy+1);
-			return;
-		}
 		if (death == 1) rodney.posy++;
 		break;
 
@@ -172,6 +164,22 @@ void drop() {
 	if (armor  != NULL) printf("12. equipped armor : %s\n",  armor->name);
 	printf("Which object do you want to drop ?");
 	scanf("%d", &index);
-	if (drop_object(index) == EPIC_WIN)	//For some unknown reason, drop() returns 0 if success (?) /* No, it returns EPIC_WIN N00B */
+	if (drop_object(index) == EPIC_FAIL)	//For some unknown reason, drop() returns 0 if success (?) /* No, it returns EPIC_WIN N00B */
 		display_msg(fail);
+}
+
+void man() {
+	static int nb = 0;
+	if (!nb) {
+		printf("h, j, k, l : move\n"
+			   "q : save'n'quit\n"
+			   "> : when on stairs (>), get down the next level\n"
+			   "d : drop\n"
+			   ", : loot\n"
+			   "z : zap\n"
+			   "b : drink\n" 
+			   "m : the man. Readable once a game.\n");
+		nb++;
+	}
+	else printf("You have already read the man.\n");
 }

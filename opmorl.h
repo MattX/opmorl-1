@@ -2,7 +2,7 @@
  * opmorl.h
  *
  *  Created on: 2 dec. 2009
- *     Authors: zale&ttthebest
+ *     Authors: zale&ttthebest&buddha
  */
 
 #ifndef OPMORL_H_
@@ -62,7 +62,7 @@ typedef struct {
 	int gold;
 	int arrows;
 	int exp_b;
-	int bow_b, sword_b; //Number of _shoots_ with bows, swords
+	int bow_b, sword_b; //Number of _shoots_ with bows, swords 
 	int exp_lvl;
 	int hp;
 } Player;
@@ -112,13 +112,13 @@ void show_objects();
 int  m_fight(); //Both fights return 1 if target killed.
 int  p_fight(int x, int y); //Value return of 2 means there wasn't a monster. It should however never happen.
 void make_town();
+void man();
 
 int clean_exit(int dummy);
 
 int min(int,int);
 int max(int,int);
 int rnd_max(int,int);
-
 void check_visit();
 
 #include "objet.h"

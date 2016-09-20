@@ -12,7 +12,7 @@
 #include "opmorl.h"
 
 /* ARGNOTUSED */
-int clean_exit(int dummy)
+int clean_exit(int dummy) // Can I know the purpose of an argnotused when you could say int clean_exit() {...} ? Don't fly with the ROFLCOPTER !
 {
 	free_monsters(m_list);
 	free_objects(o_list);
@@ -29,7 +29,7 @@ void loop()
 		c = getchar();
 		switch(c) {
 		case 'q':
-			clean_exit(0);
+			clean_exit(1);
 			break;
 		case 'h': case 'j': case 'k': case 'l':
 			move_letter(c);
@@ -53,6 +53,14 @@ void loop()
 		case ',':
 			getObject();
 			break;
+		case 'z':
+			zap_display(); // Used for showing wands in inventory. Void func.
+			break;
+		case 'm':
+			man();
+			break;
+
+
 		//TODO: Write equip() wrapper.
 		}
 		turn++;
@@ -60,7 +68,7 @@ void loop()
 	}
 }
 
-int main()
+int main(void)
 {
 	srand(time(NULL));
 
