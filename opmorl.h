@@ -8,6 +8,7 @@
 #ifndef OPMORL_H_
 #define OPMORL_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
