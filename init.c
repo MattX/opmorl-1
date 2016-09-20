@@ -7,7 +7,7 @@
 
 #include "opmorl.h"
 
-/** first_init - init vars
+/* first_init - init vars
  *
  */
 
@@ -19,7 +19,6 @@ void first_init()
 	rodney.gold = 0;
 	rodney.posx = 1;
 	rodney.posy = 1;
-/* Why did you delete these vars ? */
 	rodney.sword_b = 0;
 	rodney.bow_b = 0;
 	rodney.exp_lvl = 1;

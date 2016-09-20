@@ -130,24 +130,14 @@ void m_move()
 	}
 }
 
-void m_fight()
+/* ABSOLUTELY TO BE CALLED WHEN A MONSTER MOVES ONTO RODNEY'S POSITION,				*
+ *THEREFORE TO BE CALLED FROM M_MOVE() & FIGHT() WHICH IS CALLED BY MOVE_LETTER()	*/
+int m_fight()
 {
 	Monster * mon;
 	char val;
 
-	if((mon = get_monster(rodney.posx-1, rodney.posy)) != NULL) {
-		rodney.hp -= mon->attack;
-		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
-	}
-	if((mon = get_monster(rodney.posx+1, rodney.posy)) != NULL) {
-		rodney.hp -= mon->attack;
-		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
-	}
-	if((mon = get_monster(rodney.posx, rodney.posy-1)) != NULL) {
-		rodney.hp -= mon->attack;
-		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
-	}
-	if((mon = get_monster(rodney.posx, rodney.posy+1)) != NULL) {
+	if((mon = get_monster(rodney.posx, rodney.posy)) != NULL) {
 		rodney.hp -= mon->attack;
 		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
 	}
@@ -158,37 +148,60 @@ void m_fight()
 			val = getchar();
 			if(tolower(val) == 'n') {
 				rodney.hp = 10;
-				return;
+				return 0;
 			}
 		}
-		clean_exit(0);
+		return 1;
 	}
+	return 0;
 }
 
-void p_fight(int x, int y)
+int p_fight(int x, int y)
 {
 	Monster * mon = get_monster(x, y);
 
-	if(mon == NULL) return;
+	if(mon == NULL) return 2;
 	printf("Weapon.class = %d\n", weapon->class); fflush(stdout);
 	if (weapon->class == C_SWORD) {
-		mon->hp -= weapon->attack + rodney.sword_b/50 + rodney.exp_lvl / 3 + 1;
+		mon->hp -= weapon->attack + rodney.sword_b/50 + rodney.exp_lvl / 3 + 1; //OMG, you need a bonus of 50 for 1 extra damage
 		rodney.sword_b++;
 	}
 	else if (weapon->class == C_BOW) {
 		if(rodney.arrows == 0)
 			printf("You have no arrows left.\n");
-		mon->hp -= weapon->attack + rodney.bow_b/50 + rodney.exp_lvl / 3 + 1;
-		rodney.bow_b++;
-		rodney.arrows--;
+		else {
+			mon->hp -= weapon->attack + rodney.bow_b/50 + rodney.exp_lvl / 3 + 1;
+			rodney.bow_b++;
+			rodney.arrows--;
+		}
 	}
 	else /* Means there is no equipped weapon */
 		mon->hp -= rodney.exp_lvl / 3 + 1;
 	mon->awake = 1; /* Wake up monster */
-	if(mon->hp <= 0)
+	if(mon->hp <= 0) {
 		rm_monster(x, y);
-	if((rodney.bow_b + rodney.sword_b) % rodney.exp_lvl*rodney.exp_lvl+10)
+		return 1;
+	}
+	if((rodney.bow_b + rodney.sword_b) % rodney.exp_lvl*rodney.exp_lvl+10) //UGLY. It makes u level up at each kill.
 		printf("You have ascended to level %d\n", rodney.exp_lvl++);
+	return 0;
+}
+
+int fight(int x, int y) {
+	if (rnd_max(0, 1)) {	// Monster attacks first, lol ! Fail !
+		if (m_fight())		// Monster killed you ! You die !
+			return 2;
+		if (p_fight(rodney.posx, rodney.posy))		// You killed this bitch ! Well done !
+			return 1;
+	}
+	else {
+		if (p_fight(rodney.posx, rodney.posy))
+			return 1;
+		if (m_fight())
+			return 2;
+	}
+
+	return 0;
 }
 
 int m_valid(int x, int y)

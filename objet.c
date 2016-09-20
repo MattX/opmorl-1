@@ -19,7 +19,7 @@ Object o_default[17] = {
 	{C_WAND,    "Wand of Life",	       -1, -1,  0, 800000, 0, 1,  0}, /* same as the wand of death, more than one'd be busay */
 	{C_WAND,    "Wand of Freeze",      -1, -1,  0, 0,      1, 5,  0}, /* 5 shots seem good for this one*/
 	{C_WAND,    "Wand of Wounds",      -1, -1,  0, -30,    0, 10, 0}, /* nothing particular, just-a-comment*/
-	{C_POTION,  "Potion of Cure",      -1, -1,  0, 15,     0, 1,  0}, /* what a crappy name man*/ /* ZALE : NO FTW */
+	{C_POTION,  "Potion of Cure",      -1, -1,  0, 15,     0, 1,  0}, /* what a crappy name man*/ /* ZALE : NO FTW */ /* FTW ? fuck the window ? find the way ? */
 	{C_POTION,  "Potion of Healing",   -1, -1,  0, 35,	   0, 1,  0}, /* the name was so awful that I changed it*/
 	{C_POTION,  "Potion of Poison",    -1, -1,  0, -20,    0, 1,  0}, /* This one particularly rocks */
 	{C_SWORD,   "Wooden Sword",	       -1, -1,  5, 0,	   0, K,  0}, /* Basic sword, given at the beginning of the game */
@@ -150,11 +150,11 @@ int drop_object(int i) {
 
 			for (j = i+1; j < 10; j++)
 				inventory[j-1] = inventory[j]; //this should _not_ segfault
-			inventory[9] = NULL;
+			inventory[9] = NULL; // This should be put to 0 but I dunno how, as for down.
 
-			return 0; // dropping succeeded
+			return EPIC_WIN; // dropping succeeded
 		}
-		return 1; // FAIL
+		return EPIC_FAIL; // FAIL
 	}
 
 	else { /* the object is either the equipped weapon, armor or shield */
@@ -163,7 +163,7 @@ int drop_object(int i) {
 				add_object(*weapon, -1, -1);
 				free(weapon);
 				weapon = NULL;
-				return 0;
+				return EPIC_WIN;
 			}
 		}
 
@@ -172,7 +172,7 @@ int drop_object(int i) {
 				add_object(*armor, -1, -1);
 				free(armor);
 				armor = NULL;
-				return 0;
+				return EPIC_WIN;
 			}
 		}
 
@@ -181,12 +181,12 @@ int drop_object(int i) {
 				add_object(*shield, -1, -1);
 				free(shield);
 				shield = NULL;
-				return 0;
+				return EPIC_WIN;
 			}
 		}
 	}
 
-	return 1;
+	return EPIC_FAIL;
 }
 		
 
@@ -207,7 +207,7 @@ void getObject() {
 	int i = -1;
 	while(inventory[++i] != NULL);
 	if(i >= 10) {
-		printf("Sorry, your inventory is full.\n");
+		printf("Sorry, your inventory is full. You should try dropping something, or\n");
 		return;
 	}
 
@@ -263,7 +263,7 @@ void make_objects()
 {
 	int nb_gen = rnd_max(2, 10);
 	int posx, posy;
-	int ri;
+	int ri; // ri for remind, idiot ! 
 
 	while(nb_gen--) {
 		ri = rnd_max(0, 16);
@@ -279,23 +279,14 @@ void make_objects()
 	}
 }
 
-void drink_popo(int index) {
-	int j;
-	rodney.hp += inventory[index]->target_hp;
-	free(inventory[index]);
-	for (j = index+1; j < 10; j++)
-		inventory[j-1] = inventory[j]; //this should _not_ segfault
-	inventory[9] = NULL;
-}
+/** DIRTY CODE ENDS HERE, FOR GOD'S SAKE */
 
-/* SHOULD BE IN OBJET.C. PLEASE MOVE. */
 void zap(int x, int y, int index) /* the index of the wand in the inventory */
 {
 	int i;
 	Monster *mon = get_monster(x, y);
-	if (mon == NULL) return;
 	if (inventory[index]->shots_left > 0) {
-		mon->hp += inventory[index]->target_hp; /* The target_hp is negative is health is removed, therefore + */
+		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
 	}
 	if (!inventory[index]->shots_left) {
