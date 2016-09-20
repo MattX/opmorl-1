@@ -42,7 +42,7 @@ void loop()
 			printf("HP = %d\n", rodney.hp);
 			break;
 		case 'd':
-			drop();
+			drop(); 
 			break;
 
 		}

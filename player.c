@@ -135,12 +135,28 @@ void move_letter(char c)
 }
 
 void drop() {
-	int i, index;
+	int i = 0, index;
 	while (inventory[i] != NULL) {
-		printf("%s\n", inventory[i]->name);
+		printf("%d. %s\n", i, inventory[i]->name);
+		if (inventory[i]->class == C_WAND)
+			printf("\t%d shots remaining\n", inventory[i]->shots_left);
+		i++;
 	}
+	if (weapon != NULL) printf("11. %s\n", weapon->name);
+	if (shield != NULL) printf("12. %s\n", shield->name);
+	if (armor  != NULL) printf("13%s\n",  armor->name);
 	printf("Which object to drop ?");
 	scanf("%d", &index);
-	if (!drop_object(index))
-		printf("Drop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
+	if (index < 10)
+		if (!drop_object(index))
+			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
+	else if (index == 11)
+		if (!drop_object(WEAPON_SLOT))
+			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
+	else if (index == 12)
+		if (!drop_object(SHIELD_SLOT))
+			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
+	else if (index == 13)
+		if (!drop_object(WEAPON_SLOT))
+			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
 }

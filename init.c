@@ -21,7 +21,7 @@ void first_init()
 	rodney.posy = 1;
 	rodney.hp = 10;
 	rodney.arrows = 10;
-	weapon = &o_default[8]; 
+	weapon = &o_default[7]; 
 	armor = NULL;
 	shield = NULL;
 	for (i = 0; i < 10; i++)
