@@ -6,8 +6,6 @@
  *  Copyright 2009 OPMORL, inc. All rights reserved.
  */
 
-//TODO: write an inventory mode (see zale for details).
-
 #include "opmorl.h"
 #define K 800000000
 
@@ -108,7 +106,7 @@ int find_near_free_tile(int * posx, int * posy) {
 			for (j = y-1; j < y+2; j++)
 				if (!isObject(i, j) && lvl_map[i][j] != T_WALL 
 					&& lvl_map[i][j] != T_NONE
-					&& lvl_map[i][j] != T_STAIRS) { //TODO: Can we drop in stairs ?
+					&& lvl_map[i][j] != T_STAIRS) { // Can we drop in stairs ? -- NO
 					*posx = i;
 					*posy = j;
 					return 1;
@@ -210,15 +208,17 @@ Object * get_object(int posx, int posy)
 void getObject() {
 	int i = -1;
 	Object *tmp = get_object(rodney.posx, rodney.posy);
+	char tmpname[50]; // THIS IS A KLUGE.
+
 	if (tmp->class == C_GOLD) {
 		rodney.gold += tmp->val; 
 		rm_object(rodney.posx, rodney.posy); //As this line wasn't there you could make infinite gø|∂ ! ®øƒ| !
+											 //Man, nobody cares.
 		return;
 	}
 	if (tmp->class == C_ARROW) {
 		rodney.arrows += 10;
 		rm_object(rodney.posx, rodney.posy);
-		return;
 	}
 	while(inventory[++i] != NULL);
 	if(i >= 10) {
@@ -228,10 +228,15 @@ void getObject() {
 	
 	inventory[i] = malloc(sizeof(Object));
 	inventory[i] = tmp;
+
+	// the following lines are a kluge, but the obvious version of the code
+	// doesn't seem to work (??)
+	strncpy(tmpname, tmp->name, 49);
 	rm_object(rodney.posx, rodney.posy);
+	strncpy(inventory[i]->name, tmpname, 49);
 }
 
-void equip(int inv_index) //TODO: Fix this func.
+void equip(int inv_index) //OLD TODO: Fix this func. // PLEASE DESCRIBE THE PROBLEM
 {
 	Object * tmp;
 	int slot;
@@ -249,7 +254,7 @@ void equip(int inv_index) //TODO: Fix this func.
 		case C_ARMOR_S:
 			slot = SHIELD_SLOT;
 			break;
-		default:		//In case the user chose a shit.
+		default: // I think the lack of default also made it fail.
 			return;
 	}
 	
@@ -275,7 +280,7 @@ void equip(int inv_index) //TODO: Fix this func.
 	inventory[inv_index] = tmp;
 }
 
-void wish()
+void wish() //Segfault suspicion around here.
 {
 	int ind;
 
@@ -284,7 +289,7 @@ void wish()
 
 	if(ind > 16 || ind < 0) return;
 
-	//rm_object(rodney.posx, rodney.posy);
+	rm_object(rodney.posx, rodney.posy);
 	add_object(o_default[ind], rodney.posx, rodney.posy);
 }
 
@@ -314,6 +319,9 @@ void make_objects()
 
 void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
 {									//TODO: Fix this apparently not working func. 
+	/*
+	 * The code in here should be *very* complicated. Not just like 15 lines.
+	 */
 	int i;
 	if (x < 0 || x >= 12 ||
 		y < 0 || y >= 22) 
@@ -358,6 +366,11 @@ void zap_display() {
 
 void equip_display() {
 	int i, index;
+
+	if(!inventory[0]) {
+		printf("You can't equip anything.\n");
+		return;
+	}
 	for (i = 0; i < 10; i++) 
 		if (inventory[i])
 			if (inventory[i]->class == C_ARMOR_B ||
@@ -398,9 +411,39 @@ void drink() {
 	for (i = potion+1; i < 10; i++)
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;
-	if (rodney.hp<1) {
-		printf("You died, poisoned by a potion.");
+
+	//TODO: Replace this by a chk_dead() function.
+	if (rodney.hp < 1) {
+		printf("You die, poisoned by a potion.");
 		clean_exit(0);
 	}
 
+}
+
+//TODO: replace all tests on object index by this function.
+Object * amgo(int index) // AutoMagic Get Object
+{
+	if(index < 0 || index > 12)
+		return NULL;
+	else if(index < 10) //This may return NULL, use with caution.
+		return inventory[index];
+	else if(index == 10)
+		return weapon;
+	else if(index == 11)
+		return armor;
+	else
+		return shield;
+}
+
+void just_dropped(int index)
+{
+	int i;
+
+	if(index < 0 || index >= 10)
+		return;
+
+	free(inventory[index]); //You had forgotten this ! On an iPhone w/ ~60 Mo of RAM for you, we can't permit it.
+	for (i = index+1; i < 10; i++)
+		inventory[i-1] = inventory[i];
+	inventory[9] = NULL;
 }
