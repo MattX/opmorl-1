@@ -27,6 +27,7 @@ Object add_object(Object obj); /* Alloc room for a new object in obj_list,
 								  * then copy the obj parameter into it. */
 /* @return a pointer on the new object */
 Object * get_object(int posx, int posy);
+void getObject(); /* this function, not to be confused with get_object, gets the object at rodney.posx rodney.posy and puts it in the inventary. */
 int isObject(int posx, int posy);
 void rm_object(int posx, int posy); /* Remove the object at posx, posy */
 void free_objects(); /* free() all the list */

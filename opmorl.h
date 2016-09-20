@@ -50,10 +50,10 @@ typedef struct obj_type {
 	struct obj_type * next; 
 } Object;
 
-Object inventory[10]; 
-Object weapon;
-Object shield;
-Object armor;
+Object *inventory[10]; 
+Object *weapon;
+Object *shield;
+Object *armor;
 
 typedef struct {
 	int posx, posy;
@@ -82,6 +82,7 @@ typedef struct m_type {
 extern Monster m_default[14];
 Monster * m_list;
  
+
 
 
 extern Object o_default[17];

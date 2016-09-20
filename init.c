@@ -13,19 +13,19 @@
 
 void first_init()
 {
+	int i;
 	srand(time(NULL));
 
 	rodney.gold = 0;
 	rodney.posx = 1;
 	rodney.posy = 1;
-/* Why did you delete these vars ? */
-	rodney.sword_b = 0;
-	rodney.bow_b = 0;
 	rodney.hp = 10;
 	rodney.arrows = 10;
-	weapon = o_default[8]; 
-	armor; /* If these are no pointers, how to initialize them ? */
-	shield; /* shield = 0 should be valid. */
+	weapon = &o_default[8]; 
+	armor = NULL;
+	shield = NULL;
+	for (i = 0; i < 10; i++)
+		inventory[i] = NULL;
 
 	m_list = NULL;
 

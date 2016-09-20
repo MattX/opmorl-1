@@ -8,7 +8,6 @@
  */
 
 #include "opmorl.h"
-/* ENOUGH CRAPPY VALUES ! */
 #define K 800000000
 
 
@@ -26,15 +25,11 @@ Object o_default[17] = {
 	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
 	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
 	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
-	/* Remove the following object */
 	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0}, /* Arrows increment from 25 the "arrows" variable from Rodney.*/
 	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,      0, K,  0},
 	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,      0, K,  0},
 	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,      0, K,  0}}; /* DONE \o/ */
 
-/*** VERY IMPORTANT NOTE : FUNCTION NAMES CHANGED TO USE
- *** THE SAME SPEC AS IN MONSTER.C. PLEASE CHECK OUT OBJET.H
- ***/
 
 Object add_object(Object obj) {
 	Object *new = malloc(sizeof(Object));
@@ -117,7 +112,7 @@ void free_objects(Object * obj)
 int drop_object(int i) {
 	int j;
 	if (i < 10) { /* means the object is in the inventory */
-		if (!find_near_free_tile(&inventory[i].posx, &inventory[i].posy)) {
+		if (!find_near_free_tile(&inventory[i]->posx, &inventory[i]->posy)) {
 			for (j = i+1; j < 10; j++)
 				inventory[j-1] = inventory[j]; //this should _not_ segfault
 			inventory[9]; // This should be putted to 0 but I dunno how, as for down.
@@ -127,21 +122,21 @@ int drop_object(int i) {
 	}
 	else { /* the object is either the equipped weapon, armor or shield */
 		if (i == WEAPON_SLOT) {
-			if (!find_near_free_tile(&weapon.posx, &weapon.posy)) {
+			if (!find_near_free_tile(&weapon->posx, &weapon->posy)) {
 				weapon;
 				return 0;
 			}
 			return 1; // FAIL
 		}
 		if (i == ARMOR_SLOT) {
-			if (!find_near_free_tile(&armor.posx, &armor.posy)) {
+			if (!find_near_free_tile(&armor->posx, &armor->posy)) {
 				armor;
 				return 0;
 			}
 			return 1; // FAIL
 		}
 		if (i == SHIELD_SLOT) {
-			if (!find_near_free_tile(&shield.posx, &shield.posy)) {
+			if (!find_near_free_tile(&shield->posx, &shield->posy)) {
 				shield;
 				return 0;
 			}
@@ -152,8 +147,7 @@ int drop_object(int i) {
 }
 		
 
-Object * get_object(int posx, int posy)
-{
+Object *get_object(int posx, int posy) {
 	Object * current = o_list;
 	
 	while(current != NULL) {
@@ -164,3 +158,13 @@ Object * get_object(int posx, int posy)
 	
 	return NULL;
 }
+
+void getObject() {
+	int i;
+	while (inventory[i] != NULL)
+		i++;
+	i--;
+	inventory[i] = get_object(rodney.posx, rodney.posy);
+	rm_object(rodney.posx, rodney.posy);
+}
+	

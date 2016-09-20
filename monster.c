@@ -2,10 +2,11 @@
  * monster.c
  *
  *  Created on: 3 dec. 2009
- *      Author: Matthieu (SPELLING *WAS* CORRECT)
+ *      Author: Mathieu
  */
 
 #include "opmorl.h"
+#include "objet.h"
 
 Monster m_default[14] =
 	/*      x  y  name         att fr bm iv aw pr  hp  next */
@@ -82,7 +83,6 @@ Monster * get_monster(int posx, int posy)
  * function. TTTHEBEST : did you mean an unexisting position ?
  * ZALE : No, i meant position containing no monster. TTTHEBEST : It's what I meant, how do you want to "call on an unexisting function" ?
  * TTTHEBEST : Yeah, lapsus. //TTTHEBEST : Why the fuck did you answer w/  MY nickname OMG
- * ZALE : Sorry, lapsus again !
  * PLEASE NOTE : this conversation will be deleted on next+1 update.
  */
 void rm_monster(int posx, int posy)
@@ -136,28 +136,32 @@ void p_fight(int x, int y)
 	
 
 	if(mon == NULL) return;
-	if (weapon.class != C_BOW) mon->hp -= weapon.attack;
-	if (weapon.class == C_BOW && rodney.arrows > 1) {
-		mon->hp -= weapon.attack;
+	if (weapon->class == C_SWORD) mon->hp -= weapon->attack;
+	else if (weapon->class == C_BOW && rodney.arrows > 1) {
+		mon->hp -= weapon->attack;
 		rodney.arrows--;
 	}
-/* Wands can NOT be wield as weapons, so this code is nonsense. We
- * should create a zap() function for this. */
-	else if (weapon.class == C_WAND) {
-		weapon.shots_left--;
-		if (weapon.shots_left == 0) {
-			drop_object(WEAPON_SLOT);
-			rm_object(x, y); /* The object is dropped and immediately deleted */
-							 /* OK, but this code is wrong : you don't know _where_
-							  * it has been dropped */
-		}
-	}
-	
+	else /* Means there is no equipped weapon */
+		mon->hp -= 3;
 	mon->awake = 1; /* Wake up monster */
 	if(mon->hp <= 0)
 		rm_monster(x, y);
 }
 
+void zap(int x, int y, int index) /* the index of the wand in the inventory */
+{
+	int i;
+	Monster *mon = get_monster(x, y);
+	if (inventory[index]->shots_left > 0) {
+		mon->hp += inventory[index]->target_hp; /* The target_hp is negative is health is removed, therefore + */
+		inventory[index]->shots_left--;
+	}
+	if (!inventory[index]->shots_left) {
+		for (i = index; i < 9; i++)
+			inventory[index] = inventory[index+1];
+		inventory[9] = NULL;
+	}
+}
 int m_valid(int x, int y)
 {
 	if(rodney.posx != x && rodney.posy != y && get_monster(x, y) == NULL &&
