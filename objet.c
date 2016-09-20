@@ -24,14 +24,6 @@ Object add_object(Object obj) {
 	return *new;
 }
 
-int isSomething(int posx, int posy) {
-	if (lvl_map[posx][posy] == T_FLOOR || lvl_map[posx][posy] == T_CORRIDOR)
-		if (isObject(posx, posy) || isMonster(posx, posy))
-			return 1;
-		return 0;
-	return 1;
-}
-
 void rm_object(int posx, int posy)
 {
 	Object * current = o_list;
@@ -54,67 +46,23 @@ void rm_object(int posx, int posy)
 	}
 }
 
+/* A little feature of this func (no bug !) is that it will follow this pattern : 123 instead of : 627 
+																				  456			   513
+																				  789			   948 */
 int find_near_free_tile(int * posx, int * posy) {
-	int ok = 0;
+	int i, j;
 	int curx = rodney.posx;
 	int cury = rodney.posy;
-	if (isSomething(curx-1, cury) == 0) {
-		*posx = curx-1;
-		ok++;
-	}
-	else if (isSomething(curx, cury+1) == 0) {
-		*posy = cury+1;
-		ok++;
-	}
-	else if (isSomething(curx+1, cury) == 0) {
-		*posx = curx+1;
-		ok++;
-	}
-	else if (isSomething(curx, cury-1) == 0) {
-		*posy = cury-1;
-		ok++;
-	}
-	else if (isSomething(curx-1, cury-1) == 0) {
-		*posx = curx-1;
-		*posy = cury-1;
-		ok++;
-	}
-	else if (isSomething(curx-1, cury+1) == 0) {
-		*posx = curx-1;
-		*posy = cury+1;
-		ok++;
-	}
-	else if (isSomething(curx+1, cury+1) == 0) {
-		*posx = curx+1;
-		*posy = cury+1;
-		ok++;
-	}
-	else if (isSomething(curx+1, cury-1) == 0) {
-		*posx = curx+1;
-		*posy = cury-1;
-		ok++;
-	}
-
-	if (ok)
-		return 1;
-	return 0;
+	for (i = curx-1; i < curx+2; i++)
+		for (j = cury-1; j < cury+2; j++)
+			if (isObject(i, j) || lvl_map[i][j] == T_WALL || lvl_map[i][j] == T_NONE)
+				return 0;
+	return 1;
 }
-
-/* The two following functions are fucking ENOTNEEDED */
 /* This function is not KNOWN to work, but where could bugs hide in 5 lines of code ? */
 
 int isObject(int posx, int posy) {
 	Object *tmp = get_object(posx, posy);
-	if (tmp == NULL)
-		return 0;
-	free(tmp);
-	return 1;
-	return 0;
-}
-
-/* same as up */
-int isMonster(int posx, int posy) {
-	Monster *tmp = get_monster(posx, posy);
 	if (tmp == NULL)
 		return 0;
 	free(tmp);

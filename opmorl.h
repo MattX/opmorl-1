@@ -15,6 +15,7 @@
 
 #define FINAL_LVL 20
 #define DEBUG 1
+#define K 80000000
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS } Tile;
 Tile lvl_map[12][11];
@@ -66,11 +67,29 @@ typedef struct obj_type {
 	struct obj_type * next; 
 } Object;
  
-Object o_default[25]; /* As I don't remember how many objects there is, and I have the *flemme* to check, 25 */
+
+/* every object is defined w/ a x and y of -1 to be off-map. They are not to be modified, but to be copied into a custom one */
+Object o_default[17] = {
+	{C_WAND,    "Wand of Death",       -1, -1,  0, -80000, 0, 1,  0}, /* The Wand of Death doesn't freeze, but instakills, no arrows, one shot only (because it'd be busay)*/
+	{C_WAND,    "Wand of Life",	       -1, -1,  0, 800000, 0, 1,  0}, /* same as the wand of death, more than one'd be busay */
+	{C_WAND,    "Wand of Freeze",      -1, -1,  0, 0,      1, 5,  0}, /* 5 shots seem good for this one*/
+	{C_WAND,    "Wand of Wounds",      -1, -1,  0, -30,    0, 10, 0}, /* nothing particular, just-a-comment*/
+	{C_POTION,  "Potion of Cure",      -1, -1,  0, 15,     0, 1,  0}, /* what a shitty name man*/
+	{C_POTION,  "Potion of Healing",   -1, -1,  0, 35,	   0, 1,  0}, /* the name was so awful that I changed it*/
+	{C_POTION,  "Potion of Poison",    -1, -1,  0, -20,    0, 1,  0}, /* This one particularly rocks */
+	{C_SWORD,   "Wooden Sword",	       -1, -1,  5, 0,	   0, K,  0}, /* Basic sword, given at the beginning of the game */
+	{C_SWORD,   "Iron Sword",	       -1, -1,  7, 0,      0, K,  0}, /* This Sword is powerfuller */
+	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,      0, K,  0}, /* The most powerful sword in-game */
+	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	   0, K,  0},
+	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	   0, K,  0}, /* I do love bows */
+	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	   0, 25, 0},
+	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,       0, K, 0},
+	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,       0, K, 0},
+	{C_ARMOR_S, "The Mithril Mail",    -1, -1,  0, 0,       0, K, 0}}; /* DONE \o/ */
 
 Object * o_list; 
 
-/* FUNCTIONS */
+/* FONCTIONS */
 
 void fill_map();
 void display_map();

@@ -61,7 +61,7 @@ Monster * get_monster(int posx, int posy)
 
 /* NOTE : it's not an error to call rm_monster on an unexisting
  * function. TTTHEBEST : did you mean an unexisting position ?
- * ZALE : No, i meant position containing no monster.
+ * ZALE : No, i meant position containing no monster. TTTHEBEST : It's what I meant, how do you want to "call on an unexisting function" ?
  */
 void rm_monster(int posx, int posy)
 {

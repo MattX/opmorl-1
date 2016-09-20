@@ -5,6 +5,7 @@
  *      Author: zale
  */
 
+
 #include "opmorl.h"
 
 /** first_init - init vars
@@ -29,5 +30,5 @@ void first_init()
 
 	//Now we init monsters :
 	/*m_default =
-	{ { ""*/
+	{ { ""*/ /*nothing for now */
 }

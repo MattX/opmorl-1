@@ -106,7 +106,7 @@ void corridor_gen()
 }
 
 /* Topo : (a) we choose a nb of monsters to generate
- *        (b) we look at the
+ *        (b) we look at the ?
  */
 void make_monster()
 {
