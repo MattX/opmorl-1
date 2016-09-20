@@ -105,6 +105,7 @@ void fill_visit()
 void move_letter(char c)
 {
 	int ret, mon; //Whether the monster's dead
+	turn_spent = 1;
 
 	switch(c) {
 	case 'h': // move <-
@@ -158,6 +159,8 @@ void move_letter(char c)
 
 void drop() {
 	int i = 0, index;
+	turn_spent = 1;
+
 	char fail[] = "\nYou cannot drop here.\n";
 
 	while (inventory[i] != NULL) {
@@ -249,6 +252,7 @@ void display_state() {
 
 void open_door() { //This function fails, the two southern doors acceed the school (which fails, too)
 	if (lvl_map[rodney.posx][rodney.posy] == T_DOOR) { 
+		turn_spent = 1;
 		if (rodney.posx == 3 && rodney.posy == 5)			//North West
 			shop();
 		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
@@ -263,10 +267,33 @@ void open_door() { //This function fails, the two southern doors acceed the scho
 }
 
 void check_exp_lvl() {
-	if(rodney.exp_b >= rodney.exp_lvl * 10) {
+	if(rodney.exp_b >= rodney.exp_lvl * 5) {
 		rodney.exp_b = 0;
 		rodney.exp_lvl++;
 		rodney.max_hp += 4;
 		rodney.hp = rodney.hp / (rodney.max_hp-4) * rodney.max_hp;
 	}
+}
+
+void chk_dead(char * cause) {
+	char ans;
+
+	if(rodney.hp > 0) return;
+
+	//So, you're dead ?
+	printf("You die");
+	if(cause) printf(", killed by %s", cause);
+	printf("...\n");
+
+#ifdef DEBUG
+	printf("Die (y/n) ? ");
+	ans = getchar(); getchar();
+	if(tolower(ans) == 'n') {
+		rodney.hp = rodney.max_hp;
+		printf("Returning...\n"); fflush(stdout);
+		return;
+	}
+#endif /*DEBUG*/
+
+	clean_exit(0);
 }

@@ -38,6 +38,7 @@ void first_init()
 
 	lvl_nb = 1;
 	turn = 0;
+	turn_spent = 0;
 
 	clear_status();
 }

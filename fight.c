@@ -15,30 +15,30 @@
 #include "opmorl.h"
 #include "objet.h"
 
-/* ABSOLUTELY TO BE CALLED WHEN A MONSTER MOVES ONTO RODNEY'S POSITION	*/
+void sing_fight(Monster * mon)
+{
+	if(mon == NULL) return;
+/*total att = monster attack - defense : shield          - defense : armor. */
+	rodney.hp -= mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0);
+
+	printf("The monster @ %d, %d hit you for %d damage.\n", mon->posx, mon->posy,
+			mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0));
+	chk_dead("a monster");
+}
+
 int m_fight()
 {
 	Monster * mon;
 	char val;
 	
-	if((mon = get_monster(rodney.posx, rodney.posy)) != NULL) {
-		rodney.hp -= mon->attack;
-		printf("The %s hits you for %d damage.\n", mon->name, mon->attack);
-		fflush(stdout);
-	}
-	if (rodney.hp < 1) {
-		if(DEBUG) {
-			printf("Die(y/n) ? ");
-			getchar();
-			val = getchar();
-			if(tolower(val) == 'n') {
-				rodney.hp = 10;
-				return 0;
-			}
-		}
-		return 1;
-	}
-	return 0;
+	mon = get_monster(rodney.posx-1, rodney.posy);
+	sing_fight(mon);
+	mon = get_monster(rodney.posx+1, rodney.posy);
+	sing_fight(mon);
+	mon = get_monster(rodney.posx, rodney.posy-1);
+	sing_fight(mon);
+	mon = get_monster(rodney.posx, rodney.posy+1);
+	sing_fight(mon);
 }
 
 int p_fight(int x, int y)

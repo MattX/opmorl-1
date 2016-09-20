@@ -117,17 +117,16 @@ void free_monsters(Monster * mon)
 	m_list = NULL;
 }
 
-//TODO: write this func.
 void m_move()
 {
 	Monster * current = m_list;
 
 	while(current != NULL) {
-		if(!current->awake) continue;
-		/*Here, write some code that (a) finds the shortest way to the player
-									 (b) returns the first step of this path. */
-			//#define Dijkstra(x) ((x)*(x)*(x)+1)
-		
+		if(!current->awake) {
+			current = current->next;
+			continue;
+		}
+		mon_move(current->posx, current->posy);
 		current = current->next;
 	}
 }
