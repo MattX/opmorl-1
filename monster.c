@@ -2,11 +2,11 @@
  * monster.c
  *
  *  Created on: 3 dec. 2009
- *      Author: Mathieu
+ *      Author: Matthieu (SPELLING *WAS* CORRECT)
+ *      Owner: zale
  */
 
 #include "opmorl.h"
-#include "objet.h"
 
 Monster m_default[14] =
 	/*      x  y  name         att fr bm iv aw pr  hp  next */
@@ -35,9 +35,9 @@ Monster * add_monster(Monster mon, int posx, int posy)
 
 	*new = mon;
 	strcpy(new->name, mon.name);
-	if(posx > -1)
+	if(posx != -1)
 		new->posx = posx;
-	if(posy > -1)
+	if(posy != -1)
 		new->posy = posy;
 	new->next = NULL;
 
@@ -79,11 +79,8 @@ Monster * get_monster(int posx, int posy)
 	return NULL;
 }
 
-/* NOTE : it's not an error to call rm_monster on an unexisting
- * function. TTTHEBEST : did you mean an unexisting position ?
- * ZALE : No, i meant position containing no monster. TTTHEBEST : It's what I meant, how do you want to "call on an unexisting function" ?
- * TTTHEBEST : Yeah, lapsus. //TTTHEBEST : Why the fuck did you answer w/  MY nickname OMG
- * PLEASE NOTE : this conversation will be deleted on next+1 update.
+/* NOTE : it's not an error to call rm_monster on an empty
+ * position.
  */
 void rm_monster(int posx, int posy)
 {
@@ -95,8 +92,9 @@ void rm_monster(int posx, int posy)
 	if(current->posx == posx && current->posy == posy) {
 		m_list = current->next;
 		free(current);
+		return; // There was a bug here, killed by zale.
 	}
-	while(current->next != NULL) {
+	else while(current->next != NULL) {
 		if(current->next->posx == posx && current->next->posy == posy) {
 			tmp = current->next->next;
 			free(current->next);
@@ -108,6 +106,7 @@ void rm_monster(int posx, int posy)
 }
 
 /* Called when a new level is generated. */
+/* MUST ABSOLUTELY BE CALLED AS free_monsters(m_list); */
 void free_monsters(Monster * mon)
 {
 	if(mon == NULL) return;
@@ -115,39 +114,84 @@ void free_monsters(Monster * mon)
 		free_monsters(mon->next);
 	free(mon);
 
-	mon = NULL;
+	m_list = NULL;
+}
+
+//TODO: write this func.
+void m_move()
+{
+	Monster * current = m_list;
+
+	while(current != NULL) {
+		if(!current->awake) continue;
+		/*Here, write some code that (a) finds the shortest way to the player
+									 (b) returns the first step of this path. */
+		current = current->next;
+	}
 }
 
 void m_fight()
 {
-	int i,j;
-	for(i = rodney.posx-1; i < rodney.posx+2; i++)
-		for(j = rodney.posy-1; j < rodney.posy+2; j++)
-			if(get_monster(i, j) != NULL) {
-				rodney.hp -= get_monster(i,j)->attack;
+	Monster * mon;
+	char val;
+
+	if((mon = get_monster(rodney.posx-1, rodney.posy)) != NULL) {
+		rodney.hp -= mon->attack;
+		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
+	}
+	if((mon = get_monster(rodney.posx+1, rodney.posy)) != NULL) {
+		rodney.hp -= mon->attack;
+		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
+	}
+	if((mon = get_monster(rodney.posx, rodney.posy-1)) != NULL) {
+		rodney.hp -= mon->attack;
+		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
+	}
+	if((mon = get_monster(rodney.posx, rodney.posy+1)) != NULL) {
+		rodney.hp -= mon->attack;
+		printf("The %s hits you for %d damage.\n", mon->name, mon->attack); fflush(stdout);
+	}
+	if (rodney.hp < 1) {
+		if(DEBUG) {
+			printf("Die(y/n) ? ");
+			getchar();
+			val = getchar();
+			if(tolower(val) == 'n') {
+				rodney.hp = 10;
+				return;
 			}
-	if (rodney.hp < 1)
+		}
 		clean_exit(0);
+	}
 }
 
 void p_fight(int x, int y)
 {
 	Monster * mon = get_monster(x, y);
-	
 
 	if(mon == NULL) return;
-	if (weapon->class == C_SWORD) mon->hp -= weapon->attack;
-	else if (weapon->class == C_BOW && rodney.arrows > 1) {
-		mon->hp -= weapon->attack;
+	printf("Weapon.class = %d\n", weapon->class); fflush(stdout);
+	if (weapon->class == C_SWORD) {
+		mon->hp -= weapon->attack + rodney.sword_b/50 + rodney.exp_lvl / 3 + 1;
+		rodney.sword_b++;
+	}
+	else if (weapon->class == C_BOW) {
+		if(rodney.arrows == 0)
+			printf("You have no arrows left.\n");
+		mon->hp -= weapon->attack + rodney.bow_b/50 + rodney.exp_lvl / 3 + 1;
+		rodney.bow_b++;
 		rodney.arrows--;
 	}
 	else /* Means there is no equipped weapon */
-		mon->hp -= 3;
+		mon->hp -= rodney.exp_lvl / 3 + 1;
 	mon->awake = 1; /* Wake up monster */
 	if(mon->hp <= 0)
 		rm_monster(x, y);
+	if((rodney.bow_b + rodney.sword_b) % rodney.exp_lvl*rodney.exp_lvl+10)
+		printf("You have ascended to level %d\n", rodney.exp_lvl++);
 }
 
+/* SHOULD BE IN OBJET.C. PLEASE MOVE. */
 void zap(int x, int y, int index) /* the index of the wand in the inventory */
 {
 	int i;
@@ -162,53 +206,15 @@ void zap(int x, int y, int index) /* the index of the wand in the inventory */
 		inventory[9] = NULL;
 	}
 }
+
 int m_valid(int x, int y)
 {
 	if(rodney.posx != x && rodney.posy != y && get_monster(x, y) == NULL &&
-			lvl_map[x][y] == T_FLOOR || lvl_map[x][y] == T_STAIRS || lvl_map[x][y] == T_CORRIDOR)
+			(lvl_map[x][y] == T_FLOOR || lvl_map[x][y] == T_STAIRS || lvl_map[x][y] == T_CORRIDOR))
 		return 1;
 	return 0;
 }
 
-/* void move_monsters() //this code has been "commented" because it's error full.
-{
-	Monster * current = m_list;
-	int d_dirx, d_diry;
-
-	while(current != NULL) {
-		if(current->awake = 0) {
-			current = current->next;
-			continue;
-		}
-		/* Slightly complex code here. We want to move towards the
-		 * player in the direction that needs it the most.
-		 *
-		 * Please note that this code fails a whole lot : consider this case
-		 *   ########
-		 *   #...M..#
-		 *   #.######
-		 *    =====
-		 *   #####.##
-		 *   #...@..#
-		 *   ########
-		 * the monster M would try to move down unsucessfully.
-		 */
-		/*d_dirx = rodney.posx - current->posx;
-		d_diry = rodney.posy - current->posy;
-		/*                Means : check the correct cell for validity. The tern-exp is used to check the right cell.
-		 *                                      vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv */
-		/*if(abs(d_dirx) > abs(d_diry) && m_valid(current->dirx+(d_dirx<0?-1:1), current->diry)) {
-			if(d_dirx < 0)
-				current->dirx--;
-			else
-				current->dirx++;
-		} else if(m_valid(current->dirx, current->diry+(d_diry<0?-1:1))) {
-			if(d_diry < 0) current->diry--;
-			else current->diry++;
-		}
-		// else do not move.
-	}
-} */
 
 /** DIRTY CODE */
 
@@ -225,8 +231,8 @@ void make_monsters()
 		} while (m_default[ri].proba > lvl_nb);
 
 		do {
-			posx = rnd_max(0, 11);
-			posy = rnd_max(0, 10);
+			posx = rnd_max(0, 10);
+			posy = rnd_max(0, 21);
 		} while(get_monster(posx, posy) != NULL ||
 				lvl_map[posx][posy] == T_WALL || lvl_map[posx][posy] == T_NONE ||
 				(rodney.posx == posx && rodney.posy == posy));

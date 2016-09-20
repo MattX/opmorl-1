@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <ctype.h>
 
 
 #define FINAL_LVL 25
@@ -24,12 +25,11 @@
 #define DEBUG 0
 #endif
 
-typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS } Tile;
-Tile lvl_map[12][11];
+typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS, T_DOOR } Tile;
+Tile lvl_map[12][22];
 typedef enum { TS_SEEN, TS_DARK, TS_UNVISITED } Tilestat;
-Tilestat map_status[12][11];
+Tilestat map_status[12][22];
 
-int going_up;
 int lvl_nb;
 int turn;
 
@@ -60,7 +60,8 @@ typedef struct {
 	int gold;
 	int arrows;
 	int exp_b;
-	int bow_b, sword_b;
+	int bow_b, sword_b; //Number of _shoots_ with bows, swords
+	int exp_lvl;
 	int hp;
 } Player;
 
@@ -83,8 +84,6 @@ extern Monster m_default[14];
 Monster * m_list;
  
 
-
-
 extern Object o_default[17];
 
 Object * o_list; 
@@ -104,7 +103,13 @@ void make_monsters();
 void free_objects(Object *);
 void new_level();
 void clear_status();
+#ifdef DEBUG
 void show_monsters();
+void show_objects();
+#endif
+void m_fight();
+void p_fight();
+void make_town();
 
 int clean_exit(int dummy);
 

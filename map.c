@@ -3,6 +3,7 @@
  *
  *  Created on: 2 dec. 2009
  *      Author: zale
+ *      Owner: zale
  */
 
 #include "opmorl.h"
@@ -22,7 +23,7 @@ void clear_status()
 	int i, j;
 
 	for(i = 0; i < 12; i++)
-		for(j = 0; j < 11; j++)
+		for(j = 0; j < 22; j++)
 			map_status[i][j] = TS_UNVISITED;
 }
 
@@ -45,11 +46,19 @@ void new_level()
 
 void fill_map()
 {
-	if(rnd_max(0,1) == 1) big_gen();
+	if(lvl_nb % 7 == 0) {
+		make_town();
+		free_monsters(m_list);
+		free_objects(o_list);
+		return; //There are no objects/monsters in a town.
+	}
+	else if(lvl_nb > 10 && lvl_nb < 16) big_gen();
 	else corridor_gen();
 
+	free_monsters(m_list);
 	make_monsters();
-	//make_objects();
+	free_objects(o_list);
+	make_objects();
 }
 
 /* This code is trivial, no comment. */
@@ -61,71 +70,94 @@ void big_gen()
 	int i, j;
 
 	for(i = 0; i < 12; i++)
-		for(j = 0; j < 11; j++) {
-			if(i == 0 || j == 0 || i == 11 || j == 10)
+		for(j = 0; j < 22; j++) {
+			if(i == 0 || j == 0 || i == 11 || j == 21)
 				lvl_map[i][j] = T_WALL;
 			else
 				lvl_map[i][j] = T_FLOOR;
 		}
 
-	lvl_map[rnd_max(1, 10)][rnd_max(1, 9)] = T_STAIRS;
+	lvl_map[rnd_max(1, 10)][rnd_max(1, 20)] = T_STAIRS;
 }
 
-/* OK, here we have a room of 11x4 cells on the
- * top half of the screen and a 11x5 room on the bottom half
- * of it.
- * (0) fill the map with T_NONE's
- * (a) choose the size of the two rooms
- * (b) choose the position of the doors
- * (c) draw the walls & fill the rooms
- * (d) make the corridor.
+
+/* Totally new function here.
+ *
+ * We want : a corridor stretching to the two edges of the screen
+ * at line 5, one or two rooms on the upper side and two or three
+ * rooms on the lower side.
  */
-void corridor_gen()
-{
-	int i,j;
-	int room1, room2, door1, door2;
 
+void corridor_gen() {
+	int rooms_up, rooms_down; // nb of rooms up, down
+	int u1, d1, d2; // position of the right walls of rooms up 1, down 1, down 2.
+	int dooru1, dooru2, doord1, doord2, doord3; // position of the doors of these rooms.
+	int i, j;
+
+	//Clear everything
 	for(i = 0; i < 12; i++)
-		for(j = 0; j < 11; j++)
-			lvl_map[i][j] = T_NONE;
+		for(j = 0; j < 22; j++)
+			lvl_map[i][j] = T_FLOOR;
 
-	room1 = 4;
-	room2 = 5;
-	door1 = rnd_max(1,10);
-	door2 = rnd_max(1,10);
+	//First, make decisions.
+	//Number of rooms
+	rooms_up = rnd_max(1, 2);
+	rooms_down = rnd_max(2, 3);
 
-	//OK, let's go
-	//(c) 1- Draw the upper & lower walls
-	for(i = 0; i < 11; i++)
-		lvl_map[0][i] = lvl_map[11][i] = T_WALL;
-	//    2- Draw the border walls
+	//Position of walls
+	if(rooms_up == 2)
+		u1 = rnd_max(7, 13);
+	else
+		u1 = 21;
+	if(rooms_down == 2) {
+		d1 = rnd_max(7, 13);
+		d2 = 21;
+	} else {
+		d1 = rnd_max(5, 7);
+		d2 = rnd_max(d1+4, 13);
+	}
+
+	//Position of doors.
+	dooru1 = rnd_max(1, u1-1);
+	if(rooms_up == 2)
+		dooru2 = rnd_max(u1+1, 20);
+
+	doord1 = rnd_max(1, d1-1);
+	doord2 = rnd_max(d1+1, d2-1);
+	if(rooms_down == 3)
+		doord3 = rnd_max(d2+1, 20);
+
+	//Now, draw the border walls : horizontally
+	for(i = 0; i < 22; i++) {
+		lvl_map[0][i] = lvl_map[11][i] = lvl_map[4][i] = lvl_map[6][i] = T_WALL;
+		lvl_map[5][i] = T_CORRIDOR; // Oh yes, and we build the corridor at the same time.
+	}
+	// vertically.
 	for(i = 0; i < 12; i++) {
-		if(i > room1 && i < 11-room2) continue;
-		for(j = 0; j < 11; j++)
-			lvl_map[i][j] = T_WALL;
+		if(i == 5) continue; //On corridor line
+		lvl_map[i][0] = lvl_map[i][21] = T_WALL;
 	}
 
-	//    3- fill the rooms
-	for(i = 1; i < 10; i++) {
-		for(j = 1; j < room1; j++)
-			lvl_map[j][i] = T_FLOOR;
-		for(j = 11-room2 + 1; j < 11; j++)
-			lvl_map[j][i] = T_FLOOR;
+	//Ok, separating walls now. For top part :
+	if(rooms_up == 2)
+		for(i = 0; i < 5; i++)
+			lvl_map[i][u1] = T_WALL;
+	//and bottom part.
+	for(i = 6; i < 11; i++) {
+		lvl_map[i][d1] = T_WALL;
+		if(rooms_down == 3)
+			lvl_map[i][d2] = T_WALL;
 	}
 
-	//(d) Doors are type T_FLOOR actually
-	lvl_map[room1][door1] = T_FLOOR;
-	lvl_map[11-room2][door2] = T_FLOOR;
+	//Draw doors.
+	lvl_map[4][dooru1] = T_CORRIDOR;
+	if(rooms_up == 2)
+		lvl_map[4][dooru2] = T_CORRIDOR;
+	lvl_map[6][doord1] = lvl_map[6][doord2] = T_CORRIDOR;
+	if(rooms_down == 3)
+		lvl_map[6][doord3] = T_CORRIDOR;
 
-	for(i = min(door1, door2); i <= max(door1, door2); i++) {
-		lvl_map[room1+1][i] = T_CORRIDOR;
-	}
-
-	// Generate stairs in 2nd room
-	lvl_map[rnd_max(room2+2,10)][rnd_max(1,9)] = T_STAIRS;
-
-	// Move rodney to somewhere in 1st room
-	rodney.posx = rnd_max(1,room1);
-	rodney.posy = rnd_max(1,9);
-
+	//TODO: Modify player & stairs position.
+	lvl_map[9][20] = T_STAIRS;
+	rodney.posx = rodney.posy = 2;
 }

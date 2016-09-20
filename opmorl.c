@@ -41,10 +41,19 @@ void loop()
 			show_monsters();
 			printf("HP = %d\n", rodney.hp);
 			break;
+		case 'O':
+			show_objects();
+			break;
 		case 'd':
 			drop(); 
 			break;
-
+		case 'W':
+			wish();
+			break;
+		case ',':
+			getObject();
+			break;
+		//TODO: Write equip() wrapper.
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin

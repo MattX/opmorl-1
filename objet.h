@@ -10,21 +10,11 @@
 #define OBJET_H_
 #include "opmorl.h"
 
-/* Same as Object, see below */
-
-
-Object obj_default[16];
-Object inv[10];
-Object weapon_slot;
-Object armour_b_slot;
-Object armour_s_slot;
-Object * obj_list;
-
 /* The definition of Object type has been moved to "opmorl.h", for compatibility reasons */
 
 
-Object add_object(Object obj); /* Alloc room for a new object in obj_list,
-								  * then copy the obj parameter into it. */
+Object * add_object(Object obj, int posx, int posy);
+/* Alloc room for a new object in obj_list, then copy the obj parameter into it. */
 /* @return a pointer on the new object */
 Object * get_object(int posx, int posy);
 void getObject(); /* this function, not to be confused with get_object, gets the object at rodney.posx rodney.posy and puts it in the inventary. */
@@ -37,6 +27,8 @@ int find_near_free_tile(int * posx, int * posy);
 /* Trouve la case libre la plus proche de *posx, *posy (celle-ci comprise)
  *  et met ses coordonneees dans *posx, *posy */
 /* @return 0 si objet droppe, 1 sinon*/
+void wish();
+void make_objects();
 
 
 #endif

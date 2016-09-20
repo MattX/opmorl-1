@@ -19,9 +19,16 @@ void first_init()
 	rodney.gold = 0;
 	rodney.posx = 1;
 	rodney.posy = 1;
+/* Why did you delete these vars ? */
+	rodney.sword_b = 0;
+	rodney.bow_b = 0;
+	rodney.exp_lvl = 1;
 	rodney.hp = 10;
-	rodney.arrows = 10;
-	weapon = &o_default[7]; 
+	rodney.arrows = 0;
+
+	weapon = malloc(sizeof(Object));
+	*weapon = o_default[7];
+
 	armor = NULL;
 	shield = NULL;
 	for (i = 0; i < 10; i++)
@@ -29,7 +36,6 @@ void first_init()
 
 	m_list = NULL;
 
-	going_up = 0;
 	lvl_nb = 1;
 	turn = 0;
 

@@ -2,7 +2,7 @@
  * io.c
  *
  *  Created on: 2 dec. 2009
- *      Author: zale
+ *      Author: zale (shame on him)
  */
 
 #include <stdio.h>
@@ -17,7 +17,7 @@ void display_map()
 {
 	int i, j;
 	for(i = 0; i < 12; i++) {
-		for(j = 0; j < 11; j++) {
+		for(j = 0; j < 22; j++) {
 			if(i == rodney.posx && j == rodney.posy) {
 				putchar('@');
 				continue;
@@ -30,6 +30,11 @@ void display_map()
 
 			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
 				putchar(get_monster(i, j)->name[0]);
+				continue;
+			}
+
+			if(get_object(i, j) != NULL && map_status[i][j] == TS_SEEN) {
+				putchar(tolower(get_object(i, j)->name[0]));
 				continue;
 			}
 
@@ -47,8 +52,10 @@ void display_map()
 				putchar(' ');
 				break;
 			case T_STAIRS:
-				if(going_up) putchar ('<');
-				else putchar('>');
+				putchar('>');
+				break;
+			case T_DOOR:
+				putchar('+');
 				break;
 			}
 		}

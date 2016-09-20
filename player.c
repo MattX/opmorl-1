@@ -3,11 +3,10 @@
  *
  *  Created on: 2 dec. 2009
  *      Author: zale
+ *      Owner: both
  */
 
-#include <stdlib.h>
 #include "opmorl.h"
-#include "objet.h"
 
 #define V_NO 0
 #define V_YES 1
@@ -15,12 +14,19 @@
 
 int val_pos(int x, int y)
 {
-	if(x < 0 || x > 11 || y < 0 || y > 10 ||
+	if(x < 0 || x > 10 || y < 0 || y > 21 ||
 			lvl_map[x][y] == T_WALL || lvl_map[x][y] == T_NONE)
 		return V_NO;
 	if(get_monster(x, y) != NULL)
 		return V_COMBAT;
 	return V_YES;
+}
+
+int is_floor(int x, int y)
+{
+	if(x <= 0 || x >= 11 || y <= 0 || y >= 21) return 0;
+	if(lvl_map[x][y] == T_FLOOR || lvl_map[x][y] == T_STAIRS) return 1;
+	return 0;
 }
 
 /** find_walls : find edges (walls) of the room.
@@ -36,16 +42,16 @@ void find_walls(int * w_up, int * w_down, int * w_left, int * w_right)
 	int cx = rodney.posx, cy = rodney.posy;
 
 	//Find left & right walls
-	while(val_pos(cx, --cy));
+	while(is_floor(cx, --cy));
 	*w_left = cy;
-	while(val_pos(cx, ++cy));
+	while(is_floor(cx, ++cy));
 	*w_right = cy;
 	cy = rodney.posy;
 
 	//Find up & down walls
-	while(val_pos(--cx, cy));
+	while(is_floor(--cx, cy));
 	*w_up = cx;
-	while(val_pos(++cx, cy));
+	while(is_floor(++cx, cy));
 	*w_down = cx;
 }
 
@@ -57,13 +63,14 @@ void check_visit()
 
 	//Backup seen areas
 	for(i = 0; i < 12; i++)
-		for(j = 0; j < 11; j++)
+		for(j = 0; j < 22; j++)
 			if(map_status[i][j] == TS_SEEN) map_status[i][j] = TS_DARK;
 
 	//If in a corridor
 	if(lvl_map[rodney.posx][rodney.posy] == T_CORRIDOR) {
 		for(i = rodney.posx-1; i <= rodney.posx+1; i++)
 			for(j = rodney.posy-1; j <= rodney.posy+1; j++) {
+				if(i < 0 || i > 11 || j < 0 || j > 21) continue;
 				map_status[i][j] = TS_SEEN;
 				if(get_monster(i,j) != NULL)
 					get_monster(i,j)->awake=1;
@@ -84,6 +91,16 @@ void check_visit()
 	}
 }
 
+#ifdef DEBUG
+void fill_visit()
+{
+	int i, j;
+	for(i = 0; i < 12; i++)
+		for(j = 0; j < 22; j++)
+			map_status[i][j] = TS_SEEN;
+}
+#endif
+
 void move_letter(char c)
 {
 	int ret;
@@ -94,7 +111,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx, rodney.posy-1);
+			p_fight(rodney.posx, rodney.posy-1);
 			return;
 		}
 		rodney.posy--;
@@ -104,7 +121,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx+1, rodney.posy);
+			p_fight(rodney.posx+1, rodney.posy);
 			return;
 		}
 		rodney.posx++;
@@ -114,7 +131,7 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-			//fight(rodney.posx-1, rodney.posy);
+			p_fight(rodney.posx-1, rodney.posy);
 			return;
 		}
 		rodney.posx--;
@@ -124,39 +141,33 @@ void move_letter(char c)
 
 		if(!ret) return;
 		if(ret == V_COMBAT) {
-		//	fight(rodney.posx, rodney.posy+1);
+			p_fight(rodney.posx, rodney.posy+1);
 			return;
 		}
 		rodney.posy++;
 		break;
 
 	}
+
 	check_visit();
 }
 
+
 void drop() {
 	int i = 0, index;
+	char fail[] = "\nYou cannot drop here.\n";
+
 	while (inventory[i] != NULL) {
 		printf("%d. %s\n", i, inventory[i]->name);
 		if (inventory[i]->class == C_WAND)
 			printf("\t%d shots remaining\n", inventory[i]->shots_left);
 		i++;
 	}
-	if (weapon != NULL) printf("11. %s\n", weapon->name);
-	if (shield != NULL) printf("12. %s\n", shield->name);
-	if (armor  != NULL) printf("13%s\n",  armor->name);
-	printf("Which object to drop ?");
+	if (weapon != NULL) printf("10. equipped weapon : %s\n", weapon->name);
+	if (shield != NULL) printf("11. equipped shield : %s\n", shield->name);
+	if (armor  != NULL) printf("12. equipped armor : %s\n",  armor->name);
+	printf("Which object do you want to drop ?");
 	scanf("%d", &index);
-	if (index < 10)
-		if (!drop_object(index))
-			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
-	else if (index == 11)
-		if (!drop_object(WEAPON_SLOT))
-			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
-	else if (index == 12)
-		if (!drop_object(SHIELD_SLOT))
-			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
-	else if (index == 13)
-		if (!drop_object(WEAPON_SLOT))
-			display_msg("\nDrop failed. You are surrounded by objects. Try dropping somewhere else. LOL N00B.");
+	if (drop_object(index)) //For some unknown reason, drop() returns 0 if success (?)
+		display_msg(fail);
 }
