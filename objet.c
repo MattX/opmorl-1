@@ -3,7 +3,7 @@
  *  OPMORL
  *
  *  Created by theotime grohens on 04/12/09.
- *  Copyright 2009 __MyCompanyName__. All rights reserved.
+ *  Copyright 2009 MyWare, inc. All rights reserved.
  *
  */
 
@@ -34,14 +34,14 @@ int isSomething(int posx, int posy) {
 
 void rm_object(int posx, int posy)
 {
-	Object * current = obj_list;
+	Object * current = o_list;
 	Object * tmp;
 
 	if(current == NULL) return;
 
 	if(current->posx == posx && current->posy == posy) {
 		free(current);
-		obj_list = current->next;
+		o_list = current->next; 
 	}
 	while(current->next != NULL) {
 		if(current->next->posx == posx && current->next->posy == posy) {
@@ -100,14 +100,45 @@ int find_near_free_tile(int * posx, int * posy) {
 	return 0;
 }
 
-/* Sauf que isMonster == get_monster et isObject == get_object */
+/* This function is not KNOWN to work, but where could bugs hide in 5 lines of code ? */
 
 int isObject(int posx, int posy) {
-	//TODO
+	Object *tmp = get_object(posx, posy);
+	if (tmp == NULL)
+		return 0;
+	free(tmp);
+	return 1;
 	return 0;
 }
 
+/* same as up */
 int isMonster(int posx, int posy) {
-	//TODO
-	return 0;
+	Monster *tmp = get_monster(posx, posy);
+	if (tmp == NULL)
+		return 0;
+	free(tmp);
+	return 1;
+}
+
+
+/* Called when a new level is generated. */
+void free_objects(Object * obj)
+{
+	if(obj == NULL) return;
+	if(obj->next != NULL)
+		free_objects(obj->next);
+	free(obj);
+}
+
+Object * get_object(int posx, int posy)
+{
+	Object * current = o_list;
+	
+	while(current != NULL) {
+		if(current->posx == posx && current->posy == posy)
+			return current;
+		current = current->next;
+	}
+	
+	return NULL;
 }
