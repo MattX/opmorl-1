@@ -247,19 +247,18 @@ void display_state() {
 	putchar('\n');
 }
 
-void open_door() { 
+void open_door() { //This function fails, the two southern doors acceed the school (which fails, too)
 	if (lvl_map[rodney.posx][rodney.posy] == T_DOOR) { 
 		if (rodney.posx == 3 && rodney.posy == 5)			//North West
 			shop();
 		else if (rodney.posx == 3 && rodney.posy == 17)		//North East
 			spt();
 
-//TODO: write these funcs (LATER)
-/*		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
+		else if (rodney.posy == 7 && rodney.posy == 5)		//South West
 			castle();
 		else												//South East
 			special();
- */
+ 
 	}
 }
 
