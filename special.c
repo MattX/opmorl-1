@@ -102,6 +102,10 @@ void buy()
 		printf("%d. A %s. Value : %d\n", i, o_default[i].name, o_default[i].val);
 	printf("What do you want to buy ?\n");
 	scanf("%d", &index);
+	if(index < 0 || index >= 16) {
+		printf("This is not a valid object\n");
+		return;
+	}
 	if (o_default[index].val > rodney.gold) {
 		printf("You don't have enough money, sorry.\n");
 		return;
@@ -160,6 +164,7 @@ void recover() {
 		return;
 	}
 	while (inventory[++j]);
+	inventory[j] = malloc(sizeof(Object));
 	*inventory[j] = *spt_inv[val];
 	free(spt_inv[val]);
 	spt_inv[val] = NULL;
@@ -186,6 +191,7 @@ void give_spt() {
 		return;
 	}
 	while (spt_inv[++j]);
+	spt_inv[j] = malloc(sizeof(Object));
 	*spt_inv[j] = *inventory[val];
 	free(inventory[val]);
 	inventory[val] = NULL;
@@ -195,9 +201,9 @@ void give_spt() {
 }
 
 void spt() {
-	int retval, i = -1, j = -1;
+	int retval = 0, i = -1, j = -1;
 	printf("Welcome to the SPT station !! Here, you can leave us some objects you will recover in the next station ! How amazing !!\n");
-	while (retval) {
+	do {
 		while (inventory[++i]);
 		while (spt_inv[++j]);
 		printf("There are %d objects in your inventory, %d in the SPT.\n", i, j);
@@ -208,6 +214,6 @@ void spt() {
 		else if (retval)
 			give_spt();
 		i = j = -1;
-	}
+	} while(retval);
 	printf("\"We'll take care of your stuff !\", says the SPT team as you close the door.\n");
 }
