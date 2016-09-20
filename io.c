@@ -57,6 +57,9 @@ void display_map()
 					case C_WAND:
 						putchar('w');
 						break;
+					case C_GOLD:
+						putchar('$');
+						break;
 				}
 						 
 				continue;

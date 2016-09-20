@@ -17,7 +17,7 @@ void first_init()
 	int i;
 	srand(time(NULL));
 
-	rodney.gold = 0;
+	rodney.gold = 30;
 	rodney.posx = 1;
 	rodney.posy = 1;
 	rodney.sword_b = 0;

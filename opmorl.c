@@ -35,8 +35,12 @@ void loop()
 			move_letter(c);
 			break;
 		case '>':
-			new_level(); //TODO: fix this.
+			new_level();
 			break;
+		case 'd':
+			drop(); 
+			break;
+#ifdef DEBUG
 		case 'L':
 			show_monsters();
 			printf("HP = %d\n", rodney.hp);
@@ -44,12 +48,10 @@ void loop()
 		case 'O':
 			show_objects();
 			break;
-		case 'd':
-			drop(); 
-			break;
 		case 'W':
 			wish();
 			break;
+#endif
 		case ',':
 			getObject();
 			break;
@@ -65,7 +67,12 @@ void loop()
 		case 'p':
 			drink();
 			break;
-
+		case 's':
+			display_state();
+			break;
+		/*case 'o':
+		 open_door(); //Visit things in towns.
+			break;*/
 
 		}
 		turn++;

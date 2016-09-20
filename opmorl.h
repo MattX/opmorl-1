@@ -40,9 +40,12 @@ int lvl_nb;
 int turn;
 
 typedef enum {
-	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S
+	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S, C_GOLD
 } Class; /* ARMOR_B : body ; ARMOR_S : shield */
 
+/* A precision on gold : the value is generated between 50 and 100.		*
+ * If the object is gotten, do NOT add it to the inventory : increment	*
+ * rodney.gold and then immediately remove the object. Displayed by '€'	*/
 
 typedef struct obj_type { 
 	Class class; 
@@ -52,6 +55,7 @@ typedef struct obj_type {
 	int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
 	int freezes; /* For wands */
 	int shots_left; /* For wands */
+	int val; /* to buy and sell, and for gold. */
 	/* When shots_left == 0 the wand is deleted */
 	struct obj_type * next; 
 } Object;
@@ -63,7 +67,7 @@ Object *armor;
 
 typedef struct {
 	int posx, posy;
-	int gold;
+	int gold;		// We 'enfin' use this one, lol.
 	int arrows;
 	int exp_b;
 	int bow_b, sword_b; //Number of _shoots_ with bows, swords 
@@ -90,7 +94,7 @@ extern Monster m_default[14];
 Monster * m_list;
  
 
-extern Object o_default[16];
+extern Object o_default[17];
 
 Object * o_list; 
 

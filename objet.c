@@ -14,24 +14,25 @@
 
 /* every object is defined w/ a x and y of -1 to be off-map. *
  * They are not to be modified, but to be copied into a custom one */
-Object o_default[16] = {
-/*		type		name					x	y	atk	atk	frz	shots	next	*/
-/* 0 */	{C_WAND,    "Wand of Death",       -1, -1,  0, -K,	0,	1,		NULL}, /* The Wand of Death doesn't freeze, but instakills, no arrows, one shot only (because it'd be busay)*/
-/* 1 */	{C_WAND,    "Wand of Life",	       -1, -1,  0, K,	0,	1,		NULL}, /* same as the wand of death, more than one'd be busay */
-/* 2 */	{C_WAND,    "Wand of Freeze",      -1, -1,  0, 0,	1,	5,		NULL}, /* 5 shots seem good for this one*/
-/* 3 */	{C_WAND,    "Wand of Wounds",      -1, -1,  0, -30,	0,	10,		NULL}, /* nothing particular, just-a-comment*/
-/* 4 */	{C_POTION,  "Potion of Cure",      -1, -1,  0, 15,	0,	1,		NULL}, /* what a crappy name man*/ /* ZALE : NO FTW */ /* FTW ? fuck the window ? find the way ? */
-/* 5 */	{C_POTION,  "Potion of Healing",   -1, -1,  0, 35,	0,	1,		NULL}, /* the name was so awful that I changed it*/
-/* 6 */	{C_POTION,  "Potion of Poison",    -1, -1,  0, -20,	0,	1,		NULL}, /* This one particularly rocks */
-/* 7 */	{C_SWORD,   "Wooden Sword",	       -1, -1,  5, 0,	0,	K,		NULL}, /* Basic sword, given at the beginning of the game */
-/* 8 */	{C_SWORD,   "Iron Sword",	       -1, -1,  7, 0,	0,	K,		NULL}, /* This Sword is more powerful */
-/* 9 */	{C_SWORD,   "Steel Sword",		   -1, -1, 10, 0,	0,	K,		NULL}, /* The most powerful sword in-game */
-/* 10*/	{C_BOW,	    "Simple Bow",		   -1, -1,  5, 0,	0,	K,		NULL},
-/* 11*/	{C_BOW,	    "Coumpound Bow",	   -1, -1, 10, 0,	0,	K,		NULL}, /* I do love bows */
-/* 12*/	{C_ARROW,   "A pack of 25 Arrows", -1, -1,  0, 0,	0,	25,		NULL}, /* Arrows increment from 25 the "arrows" variable from Rodney.*/
-/* 13*/	{C_ARMOR_S, "The Shield",		   -1, -1,  0, 0,	0,	K,		NULL},
-/* 14*/	{C_ARMOR_B, "Leather Armor",       -1, -1,  0, 0,	0,	K,		NULL},
-/* 15*/	{C_ARMOR_B, "The Mithril Mail",    -1, -1,  0, 0,	0,	K,		NULL}}; /* DONE \o/ */ 
+Object o_default[17] = {
+/*		type		name					 x	 y	atk	atk	frz	amm	val	next	*/
+/* 0 */	{C_WAND,    "Wand of Death",		-1, -1,  0,	-K,	0,	1,	750,NULL}, /* The Wand of Death doesn't freeze, but instakills, no arrows, one shot only (because it'd be busay)*/
+/* 1 */	{C_WAND,    "Wand of Life",			-1, -1,  0,	K,	0,	1,	200,NULL}, /* same as the wand of death, more than one'd be busay */
+/* 2 */	{C_WAND,    "Wand of Freeze",		-1, -1,  0,	0,	1,	5,	75,	NULL}, /* 5 shots seem good for this one*/
+/* 3 */	{C_WAND,    "Wand of Wounds",		-1, -1,  0,	-30,0,	10,	100,NULL}, /* nothing particular, just-a-comment*/
+/* 4 */	{C_POTION,  "Potion of Cure",		-1, -1,  0,	15,	0,	1,	75,	NULL}, /* what a crappy name man*/ /* ZALE : NO FTW */ /* FTW ? fuck the window ? find the way ? */
+/* 5 */	{C_POTION,  "Potion of Healing",	-1, -1,  0,	35,	0,	1,	200,NULL}, /* the name was so awful that I changed it*/
+/* 6 */	{C_POTION,  "Potion of Poison",		-1, -1,  0,	-20,0,	1,	30,	NULL}, /* This one particularly rocks */
+/* 7 */	{C_SWORD,   "Wooden Sword",			-1, -1,  5,	0,	0,	K,	25,	NULL}, /* Basic sword, given at the beginning of the game */
+/* 8 */	{C_SWORD,   "Iron Sword",			-1, -1,  7,	0,	0,	K,	300,NULL}, /* This Sword is more powerful */
+/* 9 */	{C_SWORD,   "Steel Sword",			-1, -1, 10,	0,	0,	K,	600,NULL}, /* The most powerful sword in-game */
+/* 10*/	{C_BOW,	    "Simple Bow",			-1, -1,  5,	0,	0,	K,	350,NULL},
+/* 11*/	{C_BOW,	    "Coumpound Bow",		-1, -1, 10,	0,	0,	K,	650,NULL}, /* I do love bows */
+/* 12*/	{C_ARROW,   "Pack of 10 Arrows",	-1, -1,  0,	0,	0,	10,	100,NULL}, /* Arrows increment from 10 the "arrows" variable from Rodney.*/
+/* 13*/	{C_ARMOR_S, "Shield",				-1, -1,  0,	0,	0,	K,	75,	NULL},
+/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  0,	0,	0,	K,	200,NULL},
+/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,  0,	0,	0,	K,	750,NULL},
+/* 16*/ {C_GOLD,	"Some pieces of gold",	-1, -1,	 0,	0,	0,	0,	0,	NULL}}; /* DONE \o/ */ 
 
 
 Object * add_object(Object obj, int posx, int posy)
@@ -41,6 +42,8 @@ Object * add_object(Object obj, int posx, int posy)
 
 	*new = obj;
 	strcpy(new->name, obj.name);
+	if (new->class == C_GOLD)
+		obj.val = rnd_max(10, 100);
 	if(posx != -1)
 		new->posx = posx;
 	if(posy != -1)
@@ -84,8 +87,9 @@ void show_objects()
 {
 	Object * current = o_list;
 	while(current != NULL) {
-		printf("Object at %d,%d : %s.\n", current->posx,
-				current->posy, current->name);
+		printf("Object at %d,%d : %s.\n",	current->posx,
+											current->posy, 
+											current->name);
 		current = current->next;
 	}
 }
@@ -205,14 +209,20 @@ Object * get_object(int posx, int posy)
 
 void getObject() {
 	int i = -1;
+	Object *tmp = get_object(rodney.posx, rodney.posy);
+	if (tmp->class == C_GOLD) {
+		rodney.gold += tmp->val; 
+		rm_object(rodney.posx, rodney.posy); //As this line wasn't there you could make infinite gø|∂ ! ®øƒ| !
+		return;
+	}
 	while(inventory[++i] != NULL);
 	if(i >= 10) {
 		printf("Sorry, your inventory is full. You should try dropping something, or dying\n");
 		return;
 	}
-
+	
 	inventory[i] = malloc(sizeof(Object));
-	*inventory[i] = *get_object(rodney.posx, rodney.posy);
+	inventory[i] = tmp;
 	rm_object(rodney.posx, rodney.posy);
 }
 
@@ -265,7 +275,7 @@ void wish()
 	printf("What do you wish for (id) ? ");
 	scanf("%d", &ind);
 
-	if(ind > 16) return;
+	if(ind > 16 || ind < 0) return;
 
 	//rm_object(rodney.posx, rodney.posy);
 	add_object(o_default[ind], rodney.posx, rodney.posy);
@@ -275,12 +285,12 @@ void wish()
 
 void make_objects()
 {
-	int nb_gen = rnd_max(2, 10);
+	int nb_gen = rnd_max(2, 6);
 	int posx, posy;
-	int ri; // ri for remind, idiot ! 
+	int ri; // ri for remind, idiot ! BTW how could I remember, OMG.
 
 	while(nb_gen--) {
-		ri = rnd_max(0, 15);
+		ri = rnd_max(0, 16);
 
 		printf("Selected object %d for creation, name %s.\n", ri, o_default[ri].name);
 		do {
@@ -295,11 +305,11 @@ void make_objects()
 
 /** DIRTY CODE ENDS HERE, FOR GOD'S SAKE */
 
-void zap(int x, int y, int index) /* the index of the wand in the inventory */
-{
+void zap(int x, int y, int index)	/* the index of the wand in the inventory */ 			
+{									//TODO: Fix this apparently not working func. 
 	int i;
 	Monster *mon = get_monster(x, y);
-	if (mon == NULL) return;
+	if (!mon) return;
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
@@ -314,12 +324,13 @@ void zap(int x, int y, int index) /* the index of the wand in the inventory */
 void zap_display() {
 	int i, is, wand, x, y;
 	for (i = 0; i < 10; i++)
-		if (inventory[i]->class == C_WAND) {
-			printf("%d. %s with %d shot(s) left.", i, inventory[i]->name, inventory[i]->shots_left);
-			is++;
-		}
+		if (inventory[i])
+			if (inventory[i]->class == C_WAND) {
+				printf("%d. %s with %d shot(s) left.\n", i, inventory[i]->name, inventory[i]->shots_left);
+				is++;
+			}
 	if (is) {
-		printf("Which wand to use ?");
+		printf("Which wand to use ? ");
 		scanf("%d", &wand);
 		if (inventory[wand]->class != C_WAND)  {
 			printf("This is not a wand.\n");
@@ -378,7 +389,7 @@ void drink() {
 		inventory[i-1] = inventory[i];
 	inventory[9] = NULL;
 	if (rodney.hp<1) {
-		printf("You died, poisoned by a potion");
+		printf("You died, poisoned by a potion.");
 		clean_exit(0);
 	}
 

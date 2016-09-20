@@ -211,7 +211,9 @@ void man() {
 				printf("The next time you try this, you die.\n");
 				break;
 			case 6:
-				printf("You don't believe me ? You don't believe in my ultimate power ? I am Buddha, I do whatever I want.\n");
+				printf("You don't believe me ? You don't believe in my ultimate power ?"
+					   "I am Buddha, I do whatever I want. Including displaying the man.\n");
+				display_man();
 				break;
 			case 7:
 				printf("You're dead.\n");
@@ -225,10 +227,22 @@ void man() {
 			case 10:
 				printf("Found me ? N00b. Now I will sleep for ten years.\n");
 				break;
-			case 100:
-				printf("You woke me up. Die.\n");
+			case 50:
+				printf("You woke me up. Die. And learn the man.\n");
+				display_man();
 				clean_exit(0);
 				break;
 		}
 	nb++;
+}
+
+void display_state() {
+	int i;
+	printf("Life	: %d\n", rodney.hp);
+	printf("Arrows	: %d\n", rodney.arrows);
+	printf("Gold	: %d\n", rodney.gold);
+	for (i = 0; i < 10; i++)
+		if (inventory[i])
+			printf("A %s.\n", inventory[i]->name);
+	putchar('\n');
 }
