@@ -23,7 +23,7 @@ void loop()
 {
 	char c;
 
-	while(1) {
+	while(42) {
 		display_map();
 		fflush(stdout);
 		c = getchar();
@@ -54,14 +54,15 @@ void loop()
 			getObject();
 			break;
 		case 'z':
-			zap_display(); // Used for showing wands in inventory. Void func.
+			zap_display(); // zap() wrapper.
 			break;
 		case 'm':
 			man();
 			break;
+		case 'e':
+			equip_display(); //equip() wrapper
+			break;
 
-
-		//TODO: Write equip() wrapper.
 		}
 		turn++;
 		while((c = getchar()) != '\n'); // Flush stdin

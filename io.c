@@ -28,13 +28,34 @@ void display_map()
 				continue;
 			}
 
-			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
-				putchar(get_monster(i, j)->name[0]);
+			if(get_object(i, j) != NULL && map_status[i][j] == TS_SEEN) { //We print objects before, so that if there is both a monster & an object the monster is displayed.
+				switch (get_object(i, j)->class) {
+					case C_ARMOR_B:
+					case C_ARMOR_S:
+						putchar('A');
+						break;
+					case C_ARROW:
+						putchar('a');
+						break;
+					case C_BOW:
+						putchar('B');
+						break;
+					case C_POTION:
+						putchar('P');
+						break;
+					case C_SWORD:
+						putchar('S');
+						break;
+					case C_WAND:
+						putchar('W');
+						break;
+				}
+						 
 				continue;
 			}
-
-			if(get_object(i, j) != NULL && map_status[i][j] == TS_SEEN) {
-				putchar(tolower(get_object(i, j)->name[0]));
+			
+			if(get_monster(i, j) != NULL && map_status[i][j] == TS_SEEN) {
+				putchar(get_monster(i, j)->name[0]);
 				continue;
 			}
 

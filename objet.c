@@ -216,12 +216,26 @@ void getObject() {
 	rm_object(rodney.posx, rodney.posy);
 }
 
-void equip(int inv_index, int slot)
+void equip(int inv_index)
 {
 	Object * tmp;
+	int slot;
 
 	if(inv_index < 0 || inv_index > 9 || inventory[inv_index] == NULL) return;
-
+	
+	switch (inventory[inv_index]->class) {
+		case C_SWORD:
+		case C_BOW:
+			slot = WEAPON_SLOT;
+			break;
+		case C_ARMOR_B:
+			slot = ARMOR_SLOT;
+			break;
+		case C_ARMOR_S:
+			slot = SHIELD_SLOT;
+			break;
+	}
+	
 	switch(slot) {
 	case WEAPON_SLOT:
 		if(inventory[inv_index]->class != C_BOW || inventory[inv_index]->class
@@ -321,6 +335,18 @@ void zap_display() {
 	
 }
 
+void equip_display() {
+	int i, index;
+	for (i = 0; i < 10; i++)
+		if (inventory[i]->class == C_ARMOR_B ||
+			inventory[i]->class == C_ARMOR_S ||
+			inventory[i]->class == C_BOW	 ||
+			inventory[i]->class == C_SWORD)
+		printf("%d. A %s\n", i, inventory[i]->name);
+	scanf("%d", &index);
+	equip(index);
+}
+
 void drink() {
 	int i, is = 0, potion;
 	for (i = 0; i < 10; i++)
@@ -337,7 +363,7 @@ void drink() {
 		scanf("%d", &potion);
 	}
 	if (inventory[potion]->class != C_POTION) {
-		printf("This is no potion.\n");
+		printf("This is no potion, sucker.\n");
 		return;
 	}
 	rodney.hp+= inventory[potion]->target_hp;

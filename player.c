@@ -105,6 +105,8 @@ void move_letter(char c)
 {
 	int ret, death = 1; //Used to check whether the monster, or Rodney, is dead and act in consequence.
 
+	
+	//TODO: Switch rooms when Rodney opens a door in a town.
 	switch(c) {
 	case 'h': // move <-
 		ret = val_pos(rodney.posx, rodney.posy-1);

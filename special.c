@@ -42,7 +42,7 @@ void make_town()
 		strcpy(special, "Silicon Sapphire"); //This name rocks, and is a private joke to the Clash listeners, removing/changing is forgotten (or fork the project).
 	}
 
-	//Borders, ground & buildings
+	//Borders, ground & buildings 
 	for(i = 0; i < 12; i++)
 		for(j = 0; j < 22; j++) {
 			if(j < 6 || j > 16 || i == 0 || i == 11)
@@ -50,6 +50,7 @@ void make_town()
 			else
 				lvl_map[i][j] = T_FLOOR;
 		}
+	lvl_map[6][11] = T_STAIRS; //We couldn't escape the town...
 
 	//Doors
 	lvl_map[3][5] = lvl_map[7][5] = lvl_map[3][17] = lvl_map[7][17] = T_DOOR;

@@ -26,6 +26,7 @@ void drop(); /* This func, defined in player.c, displays the inventory and asks 
 int find_near_free_tile(int * posx, int * posy);
 void zap(int x, int y, int index);
 void zap_display();
+void equip_display();
 void drink();
 /* Trouve la case libre la plus proche de *posx, *posy (celle-ci comprise)
  *  et met ses coordonneees dans *posx, *posy */
