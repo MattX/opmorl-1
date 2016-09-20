@@ -18,9 +18,11 @@ void first_init()
 	rodney.gold = 0;
 	rodney.posx = 1;
 	rodney.posy = 1;
-	rodney.sword_b = 0;
-	rodney.bow_b = 0;
 	rodney.hp = 10;
+	rodney.arrows = 10;
+	rodney.weapon = &o_default[8]; 
+	rodney.armor = NULL;
+	rodney.shield = NULL;
 
 	m_list = NULL;
 

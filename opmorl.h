@@ -2,7 +2,7 @@
  * opmorl.h
  *
  *  Created on: 2 dec. 2009
- *      Author: zale&ttthebest
+ *     Authors: zale&ttthebest
  */
 
 #ifndef OPMORL_H_
@@ -14,12 +14,12 @@
 #include <time.h>
 #include <math.h>
 
+
 #define FINAL_LVL 25
 #define DEBUG 1
 #ifndef DEBUG
 #define DEBUG 0
 #endif
-#define K 80000000
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS } Tile;
 Tile lvl_map[12][11];
@@ -30,12 +30,35 @@ int going_up;
 int lvl_nb;
 int turn;
 
+typedef enum {
+	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S
+} Class; /* ARMOR_B : body ; ARMOR_S : shield */
+
+
+typedef struct obj_type { 
+	Class class; 
+	char name[50];
+	int posx, posy; 
+	int attack; /* For weapons */
+	int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
+	int freezes; /* For wands */
+	int shots_left; /* For wands */
+	/* When shots_left == 0 the wand is deleted */
+	struct obj_type * next; 
+} Object;
+
+
 typedef struct {
 	int posx, posy;
 	int gold;
-	int sword_b, bow_b;
+	int arrows;
 	int exp_b;
 	int hp;
+	Object *inventary[7]; // 7 objects + the current weapon + the current shield + the current armor = 10 TODO BTW
+	Object *weapon;
+	Object *shield;
+	Object *armor;
+	
 } Player;
 
 Player rodney;
@@ -55,37 +78,9 @@ typedef struct m_type {
 
 extern Monster m_default[14];
 Monster * m_list;
-
-typedef enum {
-	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S
-} Class; /* ARMOR_B : body ; ARMOR_S : shield */
-
-typedef struct obj_type { 
-	Class class; 
-	char name[50];
-	int posx, posy; 
-	int attack; /* For weapons */
-	int target_hp; /* For wands & potions, bonus of life (if > 0) or damage (if < 0) they do to the target */
-	int freezes; /* For wands */
-	int shots_left; /* For wands */
-	/* When shots_left == 0 the wand is deleted */
-	int nb_arrows; /* For arrows */
-	/* Note on arrows : they are always generated as a single object containing 25
-	 * arrows. At this point, nb_arrows == 25. Every time a shot is made, nb_arrows
-	 * is decremented and when nb_arrows == 0 the object is deleted */
-	struct obj_type * next; 
-} Object;
  
 
-/* PLEASE NOTE : for ANSI C compat reasons,
- * o_default and m_default must be decared as :
- *     extern Object o_default[17];
- * in opmorl.h and
- *     Object o_default[17] = { ... };
- * in objet.c.
- */
-/* ALSO NOTE : STOP WITH CRAPPY VAULES, SHIT ! Unused values must be set to 0,
- * not K, -K or any random number. Please correct this. */
+
 
 extern Object o_default[17];
 
@@ -104,6 +99,11 @@ Monster * add_monster(Monster mon, int posx, int posy);
 void free_monsters(Monster * mon);
 void make_monsters();
 void free_objects(Object *);
+void new_level();
+void clear_status();
+void show_monsters();
+
+int clean_exit(int dummy);
 
 int min(int,int);
 int max(int,int);
