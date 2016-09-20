@@ -28,7 +28,7 @@
 #ifndef DEBUG
 #define DEBUG 0
 #endif
-#define REVISION "R10"
+#define REVISION "R11"
 
 typedef enum { T_FLOOR, T_WALL, T_CORRIDOR, T_NONE, T_STAIRS, T_DOOR } Tile;
 Tile lvl_map[12][22];
@@ -37,6 +37,7 @@ Tilestat map_status[12][22];
 
 int lvl_nb;
 int turn;
+int seed;
 
 typedef enum {
 	C_WAND, C_POTION, C_BOW, C_SWORD, C_ARROW, C_ARMOR_B, C_ARMOR_S, C_GOLD

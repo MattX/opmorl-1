@@ -22,7 +22,7 @@ void sing_fight(Monster * mon)
 	rodney.hp -= mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0);
 
 	printf("The monster @ %d, %d hit you for %d damage.\n", mon->posx, mon->posy,
-			mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0));
+		   mon->attack - (shield?shield->attack:0) - (armor?armor->attack:0)); 
 	chk_dead("a monster");
 }
 

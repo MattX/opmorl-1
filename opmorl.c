@@ -15,7 +15,7 @@
 int clean_exit(int dummy) // Can I know the purpose of an argnotused when you could say int clean_exit() {...} ? Don't fly with the ROFLCOPTER !
 {
 	int i;
-
+	save();
 	free_monsters(m_list);
 	free_objects(o_list);
 	if(weapon) free(weapon);
@@ -113,5 +113,6 @@ int main(void)
 	
 	clean_exit(0);
 	 
+	save();
 	return 1;
 }

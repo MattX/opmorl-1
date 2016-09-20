@@ -28,8 +28,8 @@ Object o_default[17] = {
 /* 11*/	{C_BOW,	    "Coumpound Bow",		-1, -1, 10,	0,	0,	K,	650,NULL}, /* I do love bows */
 /* 12*/	{C_ARROW,   "Pack of 10 Arrows",	-1, -1,  0,	0,	0,	0,	100,NULL}, /* Arrows increment from 10 the "arrows" variable from Rodney.*/
 /* 13*/	{C_ARMOR_S, "Shield",				-1, -1,  3,	0,	0,	K,	75,	NULL},
-/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  7,	0,	0,	K,	200,NULL},
-/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1, 15,	0,	0,	K,	750,NULL},
+/* 14*/	{C_ARMOR_B, "Leather Armor",		-1, -1,  3,	0,	0,	K,	200,NULL},
+/* 15*/	{C_ARMOR_B, "Mithril Mail",			-1, -1,	 5,	0,	0,	K,	750,NULL},
 /* 16*/ {C_GOLD,	"Some pieces of gold",	-1, -1,	 0,	0,	0,	0,	0,	NULL}}; /* DONE \o/ */ 
 
 Object * add_object(Object obj, int posx, int posy)
@@ -336,7 +336,7 @@ void zap(int x, int y, int index)	/* the index of the wand in the inventory */
 	if (inventory[index]->shots_left > 0) {
 		mon->hp += inventory[index]->target_hp; /* The target_hp is negative -> health is removed, therefore + */
 		inventory[index]->shots_left--;
-		printf("The monster lost %d HP", inventory[index]->target_hp);
+		printf("The monster lost %d HP", -(inventory[index]->target_hp));
 	}
 	if (mon->hp < 1) {
 		printf(" and died.\n");
@@ -364,7 +364,7 @@ void zap_display() {
 			printf("This is not a wand.\n");
 			return;
 		}
-		printf("Which coordonates to zap ?\n");
+		printf("Which coordonnates to zap ?\n");
 		scanf("%d%d", &x, &y);
 		zap(x, y, wand); //The zap func should check whether the coordonates are valid.
 	}
